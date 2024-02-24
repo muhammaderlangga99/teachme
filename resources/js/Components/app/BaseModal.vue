@@ -1,34 +1,33 @@
 <script setup>
-import {computed} from 'vue'
-import {XMarkIcon} from '@heroicons/vue/24/solid'
+import { computed } from "vue";
+import { XMarkIcon } from "@heroicons/vue/24/solid";
 import {
     TransitionRoot,
     TransitionChild,
     Dialog,
     DialogPanel,
     DialogTitle,
-} from '@headlessui/vue'
+} from "@headlessui/vue";
 
 const props = defineProps({
     title: {
         type: String,
-        required: false
+        required: false,
     },
-    modelValue: Boolean
-})
+    modelValue: Boolean,
+});
 
 const show = computed({
     get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value)
-})
+    set: (value) => emit("update:modelValue", value),
+});
 
-const emit = defineEmits(['update:modelValue', 'hide'])
+const emit = defineEmits(["update:modelValue", "hide"]);
 
 function closeModal() {
-    show.value = false
-    emit('hide')
+    show.value = false;
+    emit("hide");
 }
-
 </script>
 
 <template>
@@ -44,7 +43,7 @@ function closeModal() {
                     leave-from="opacity-100"
                     leave-to="opacity-0"
                 >
-                    <div class="fixed inset-0 bg-black/25"/>
+                    <div class="fixed inset-0 bg-black/25" />
                 </TransitionChild>
 
                 <div class="fixed inset-0 overflow-y-auto">
@@ -61,18 +60,22 @@ function closeModal() {
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="w-full max-w-md transform overflow-hidden rounded bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
+                                class="w-full max-w-md transform overflow-hidden rounded-xl bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
                             >
-                                <DialogTitle v-if="title" as="h3"
-                                             class="flex items-center justify-between py-3 px-4 font-medium bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100"
+                                <DialogTitle
+                                    v-if="title"
+                                    as="h3"
+                                    class="flex items-center justify-between py-3 px-4 font-medium bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100"
                                 >
                                     {{ title }}
-                                    <button @click="closeModal"
-                                            class="w-8 h-8 rounded-full hover:bg-black/5 dark:hover:bg-black/30 transition flex items-center justify-center">
-                                        <XMarkIcon class="w-4 h-4"/>
+                                    <button
+                                        @click="closeModal"
+                                        class="w-8 h-8 rounded-full hover:bg-black/5 dark:hover:bg-black/30 transition flex items-center justify-center"
+                                    >
+                                        <XMarkIcon class="w-4 h-4" />
                                     </button>
                                 </DialogTitle>
-                                <slot/>
+                                <slot />
                             </DialogPanel>
                         </TransitionChild>
                     </div>
@@ -81,4 +84,3 @@ function closeModal() {
         </TransitionRoot>
     </teleport>
 </template>
-

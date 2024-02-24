@@ -1,7 +1,6 @@
 <script setup>
 import {Link} from '@inertiajs/vue3'
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-
 defineProps({
     user: Object,
     forApprove: {
@@ -34,7 +33,7 @@ defineEmits(['approve', 'reject', 'roleChange', 'delete'])
                 <div v-if="forApprove" class="flex gap-1">
                     <button class="text-xs py-1 px-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
                             @click.prevent.stop="$emit('approve', user)">
-                        approve
+                            approve
                     </button>
                     <button class="text-xs py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white"
                             @click.prevent.stop="$emit('reject', user)">

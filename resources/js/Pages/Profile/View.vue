@@ -16,6 +16,7 @@ import TextInput from "@/Components/TextInput.vue";
 import PostAttachments from "@/Components/app/PostAttachments.vue";
 import TabPhotos from "@/Pages/Profile/TabPhotos.vue";
 
+
 const imagesForm = useForm({
     avatar: null,
     cover: null,
@@ -142,7 +143,7 @@ function followUser() {
                 <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img :src="coverImageSrc || user.cover_url || '/img/default_cover.jpg'"
                          class="w-full h-[200px] object-cover">
-                    <div class="absolute top-2 right-2 ">
+                    <div class="absolute top-2 right-2" v-if="isMyProfile">
                         <button
                             v-if="!coverImageSrc"
                             class="bg-gray-50 hover:bg-gray-100 text-gray-800 py-1 px-2 text-xs flex items-center opacity-0 group-hover:opacity-100">
@@ -180,14 +181,14 @@ function followUser() {
                             <img :src="avatarImageSrc || user.avatar_url || '/img/default_avatar.webp'"
                                  class="w-full h-full object-cover rounded-full">
                             <button
-                                v-if="!avatarImageSrc"
+                                v-if="!avatarImageSrc && isMyProfile"
                                 class="absolute left-0 top-0 right-0 bottom-0 bg-black/50 text-gray-200 rounded-full opacity-0 flex items-center justify-center group-hover/avatar:opacity-100">
                                 <CameraIcon class="w-8 h-8"/>
 
                                 <input type="file" class="absolute left-0 top-0 bottom-0 right-0 opacity-0"
-                                       @change="onAvatarChange"/>
+                                       @change="onAvatarChange" v-if="isMyProfile"/>
                             </button>
-                            <div v-else class="absolute top-1 right-0 flex flex-col gap-2">
+                            <div v-else class="absolute top-1 right-0 flex flex-col gap-2" v-if="isMyProfile">
                                 <button
                                     @click="resetAvatarImage"
                                     class="w-7 h-7 flex items-center justify-center bg-red-500/80 text-white rounded-full">

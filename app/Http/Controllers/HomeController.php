@@ -30,14 +30,13 @@ class HomeController extends Controller
                     ->where('gu.user_id', '=', $userId)
                     ->where('gu.status', GroupUserStatus::APPROVED->value);
             })
-            ->where(function($query) use ($userId) {
+            ->where(function ($query) use ($userId) {
                 /** @var \Illuminate\Database\Query\Builder $query */
                 $query->whereNotNull('f.follower_id')
                     ->orWhereNotNull('gu.group_id')
-                    ->orWhere('posts.user_id', $userId)
-                    ;
+                    ->orWhere('posts.user_id', $userId);
             })
-//            ->whereNot('posts.user_id', $userId)
+            //            ->whereNot('posts.user_id', $userId)
             ->paginate(10);
 
         $posts = PostResource::collection($posts);
@@ -45,14 +44,20 @@ class HomeController extends Controller
             return $posts;
         }
 
+        // get 5 groups from oldest to newest
         $groups = Group::query()
-            ->with('currentUserGroup')
-            ->select(['groups.*'])
-            ->join('group_users AS gu', 'gu.group_id', 'groups.id')
-            ->where('gu.user_id', Auth::id())
-            ->orderBy('gu.role')
-            ->orderBy('name', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->limit(5)
             ->get();
+
+        // $groups = Group::query()
+        // ->with('currentUserGroup')
+        // ->select(['groups.*'])
+        // ->join('group_users AS gu', 'gu.group_id', 'groups.id')
+        // ->where('gu.user_id', Auth::id())
+        // ->orderBy('gu.role')
+        // ->orderBy('name', 'desc')
+        // ->get();
 
 
         return Inertia::render('Home', [

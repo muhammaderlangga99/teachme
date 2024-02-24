@@ -90,7 +90,6 @@ class PostController extends Controller
 
             $followers = $user->followers;
             Notification::send($followers, new PostCreated($post, $user, null));
-
         } catch (\Exception $e) {
             foreach ($allFilePaths as $path) {
                 Storage::disk('public')->delete($path);
@@ -258,8 +257,6 @@ class PostController extends Controller
         }
 
         return response("You don't have permission to delete this comment.", 403);
-
-
     }
 
     public function updateComment(UpdateCommentRequest $request, Comment $comment)
@@ -313,10 +310,10 @@ class PostController extends Controller
 
     public function aiPostContent(Request $request)
     {
-        $prompt = $request->get('prompt');
+        $prompt = $request->get('prompt'); // ambil tulisan dari request user
 
         $result = OpenAI::chat()->create([
-            'model' => 'gpt-4',
+            'model' => 'gpt-3.5-turbo-instruct',
             'messages' => [
                 [
                     'role' => 'user',
@@ -327,8 +324,8 @@ class PostController extends Controller
         ]);
 
         return response([
-            'content' => $result->choices[0]->message->content
-//            'content' => "\"🎉 Exciting news! We're thrilled to announce that we just released a brand new feature on our app/website! 💥 Get ready to experience the next level of convenience and efficiency with this game-changing addition. 🚀 Try it out now and let us know what you think! 😍 #NewFeatureAlert #UpgradeYourExperience\""
+            'content' => $result->choices[0]->message->content // ambil hasil dari OpenAI
+            //            'content' => "\"🎉 Exciting news! We're thrilled to announce that we just released a brand new feature on our app/website! 💥 Get ready to experience the next level of convenience and efficiency with this game-changing addition. 🚀 Try it out now and let us know what you think! 😍 #NewFeatureAlert #UpgradeYourExperience\""
         ]);
     }
 
@@ -399,8 +396,8 @@ class PostController extends Controller
             $user->save();
         }
 
-        return back()->with('success', 'Post was successfully ' . ( $pinned ? 'pinned' : 'unpinned' ));
+        return back()->with('success', 'Post was successfully ' . ($pinned ? 'pinned' : 'unpinned'));
 
-//        return response("You don't have permission to perform this action", 403);
+        //        return response("You don't have permission to perform this action", 403);
     }
 }

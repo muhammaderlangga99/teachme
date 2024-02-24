@@ -84,7 +84,7 @@ class GroupController extends Controller
             ->latest()
             ->get();
 
-//        dd($photos->toSql());
+        //        dd($photos->toSql());
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
@@ -171,7 +171,7 @@ class GroupController extends Controller
             $success = 'Your thumbnail image was updated';
         }
 
-//        session('success', 'Cover image has been updated');
+        //        session('success', 'Cover image has been updated');
 
         return back()->with('success', $success);
     }
@@ -291,7 +291,7 @@ class GroupController extends Controller
             $user = $groupUser->user;
             $user->notify(new RequestApproved($groupUser->group, $user, $approved));
 
-            return back()->with('success', 'User "' . $user->name . '" was ' . ( $approved ? 'approved' : 'rejected' ));
+            return back()->with('success', 'User "' . $user->name . '" was ' . ($approved ? 'approved' : 'rejected'));
         }
 
         return back();
@@ -354,5 +354,17 @@ class GroupController extends Controller
         }
 
         return back();
+    }
+
+    public function destroyGroup(Request $request, Group $group)
+    {
+        if (!$group->isAdmin(Auth::id())) {
+            return response("You don't have permission to perform this action", 403);
+        }
+
+        $group->delete();
+
+        // berikan notifikasi alert bahwa group berhasil dihapus
+        return redirect(route('home'))->with('success', 'Group "' . $group->name . '" was deleted');
     }
 }

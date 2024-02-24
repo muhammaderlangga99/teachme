@@ -135,7 +135,7 @@ class ProfileController extends Controller
             $success = 'Your avatar image was updated';
         }
 
-//        session('success', 'Cover image has been updated');
+        //        session('success', 'Cover image has been updated');
 
         return back()->with('success', $success);
     }

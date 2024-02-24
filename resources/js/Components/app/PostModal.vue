@@ -1,10 +1,17 @@
 <script setup>
-import {computed, ref, watch} from 'vue'
-import {XMarkIcon, PaperClipIcon, BookmarkIcon, ArrowUturnLeftIcon} from '@heroicons/vue/24/solid'
+import { computed, ref, watch } from "vue";
+import {
+    XMarkIcon,
+    PaperClipIcon,
+    BookmarkIcon,
+    ArrowUturnLeftIcon,
+    PhotoIcon,
+    VideoCameraIcon,
+} from "@heroicons/vue/24/solid";
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
-import {useForm, usePage} from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import {isImage} from "@/helpers.js";
+import { isImage } from "@/helpers.js";
 import axiosClient from "@/axiosClient.js";
 import UrlPreview from "@/Components/app/UrlPreview.vue";
 import BaseModal from "@/Components/app/BaseModal.vue";
@@ -12,22 +19,47 @@ import BaseModal from "@/Components/app/BaseModal.vue";
 const editor = ClassicEditor;
 const editorConfig = {
     mediaEmbed: {
-        removeProviders: ['dailymotion', 'spotify', 'youtube', 'vimeo', 'instagram', 'twitter', 'googleMaps', 'flickr', 'facebook']
+        removeProviders: [
+            "dailymotion",
+            "spotify",
+            "youtube",
+            "vimeo",
+            "instagram",
+            "twitter",
+            "googleMaps",
+            "flickr",
+            "facebook",
+        ],
     },
-    toolbar: ['bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'heading', '|', 'outdent', 'indent', '|', 'link', '|', 'blockQuote'],
-}
+    toolbar: [
+        "bold",
+        "italic",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "|",
+        "heading",
+        "|",
+        "outdent",
+        "indent",
+        "|",
+        "link",
+        "|",
+        "blockQuote",
+    ],
+};
 
 const props = defineProps({
     post: {
         type: Object,
-        required: true
+        required: true,
     },
     group: {
         type: Object,
-        default: null
+        default: null,
     },
-    modelValue: Boolean
-})
+    modelValue: Boolean,
+});
 
 const attachmentExtensions = usePage().props.attachmentExtensions;
 /**
@@ -37,100 +69,107 @@ const attachmentExtensions = usePage().props.attachmentExtensions;
  * }
  * @type {Ref<UnwrapRef<*[]>>}
  */
-const attachmentFiles = ref([])
-const attachmentErrors = ref([])
+const attachmentFiles = ref([]);
+const attachmentErrors = ref([]);
 const formErrors = ref({});
 const aiButtonLoading = ref(false);
 
 const form = useForm({
-    body: '',
+    body: "",
     group_id: null,
     attachments: [],
     deleted_file_ids: [],
     preview: {},
     preview_url: null,
-    _method: 'POST'
-})
+    _method: "POST",
+});
 
 const show = computed({
     get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value)
-})
+    set: (value) => emit("update:modelValue", value),
+});
 
 const computedAttachments = computed(() => {
-    return [...attachmentFiles.value, ...(props.post.attachments || [])]
-})
+    return [...attachmentFiles.value, ...(props.post.attachments || [])];
+});
 const showExtensionsText = computed(() => {
     for (let myFile of attachmentFiles.value) {
-        const file = myFile.file
-        let parts = file.name.split('.')
-        let ext = parts.pop().toLowerCase()
+        const file = myFile.file;
+        let parts = file.name.split(".");
+        let ext = parts.pop().toLowerCase();
         if (!attachmentExtensions.includes(ext)) {
-            return true
+            return true;
         }
     }
 
     return false;
-})
+});
 
-const emit = defineEmits(['update:modelValue', 'hide'])
+const emit = defineEmits(["update:modelValue", "hide"]);
 
-watch(() => props.post, () => {
-    form.body = props.post.body || ''
-    onInputChange();
-})
+watch(
+    () => props.post,
+    () => {
+        form.body = props.post.body || "";
+        onInputChange();
+    }
+);
 
 function closeModal() {
-    show.value = false
-    emit('hide')
+    show.value = false;
+    emit("hide");
     resetModal();
 }
 
 function resetModal() {
-    form.reset()
-    formErrors.value = {}
-    attachmentFiles.value = []
+    form.reset();
+    formErrors.value = {};
+    attachmentFiles.value = [];
     attachmentErrors.value = [];
     if (props.post.attachments) {
-        props.post.attachments.forEach(file => file.deleted = false)
+        props.post.attachments.forEach((file) => (file.deleted = false));
     }
 }
 
 function submit() {
-    if (props.group) {
-        form.group_id = props.group.id
+    if (!form.body) {
+        return;
     }
-    form.attachments = attachmentFiles.value.map(myFile => myFile.file)
+    if (props.group) {
+        form.group_id = props.group.id;
+    }
+    form.attachments = attachmentFiles.value.map((myFile) => myFile.file);
     if (props.post.id) {
-        form._method = 'PUT'
-        form.post(route('post.update', props.post.id), {
+
+        form._method = "PUT";
+        form.post(route("post.update", props.post.id), {
             preserveScroll: true,
             onSuccess: (res) => {
-                closeModal()
+                closeModal();
             },
             onError: (errors) => {
-                processErrors(errors)
-            }
-        })
+                processErrors(errors);
+            },
+        });
     } else {
-        form.post(route('post.create'), {
+        form.post(route("post.create"), {
             preserveScroll: true,
             onSuccess: (res) => {
-                closeModal()
+                closeModal();
             },
             onError: (errors) => {
-                processErrors(errors)
-            }
-        })
+                processErrors(errors);
+            },
+        });
     }
 }
 
 function processErrors(errors) {
-    formErrors.value = errors
+    formErrors.value = errors;
     for (const key in errors) {
-        if (key.includes('.')) {
-            const [, index] = key.split('.')
-            attachmentErrors.value[index] = errors[key]
+        if (key.includes(".")) {
+            const [, index] = key.split(".");
+            attachmentErrors.value[index] = errors[key];
         }
     }
 }
@@ -139,9 +178,9 @@ async function onAttachmentChoose($event) {
     for (const file of $event.target.files) {
         const myFile = {
             file,
-            url: await readFile(file)
-        }
-        attachmentFiles.value.push(myFile)
+            url: await readFile(file),
+        };
+        attachmentFiles.value.push(myFile);
     }
     $event.target.value = null;
 }
@@ -151,46 +190,51 @@ async function readFile(file) {
         if (isImage(file)) {
             const reader = new FileReader();
             reader.onload = () => {
-                res(reader.result)
-            }
-            reader.onerror = rej
-            reader.readAsDataURL(file)
+                res(reader.result);
+            };
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
         } else {
-            res(null)
+            res(null);
         }
-    })
+    });
 }
 
 function removeFile(myFile) {
     if (myFile.file) {
-        attachmentFiles.value = attachmentFiles.value.filter(f => f !== myFile)
+        attachmentFiles.value = attachmentFiles.value.filter(
+            (f) => f !== myFile
+        );
     } else {
-        form.deleted_file_ids.push(myFile.id)
-        myFile.deleted = true
+        form.deleted_file_ids.push(myFile.id);
+        myFile.deleted = true;
     }
 }
 
 function undoDelete(myFile) {
     myFile.deleted = false;
-    form.deleted_file_ids = form.deleted_file_ids.filter(id => myFile.id !== id)
+    form.deleted_file_ids = form.deleted_file_ids.filter(
+        (id) => myFile.id !== id
+    );
 }
 
 function getAIContent() {
-    if (!form.body) {
+    if (!form.body) { 
         return;
     }
     aiButtonLoading.value = true;
-    axiosClient.post(route('post.aiContent'), {
-        prompt: form.body
-    })
-        .then(({data}) => {
-            form.body = data.content
+    axiosClient
+        .post(route("post.aiContent"), {
+            prompt: form.body,
+        })
+        .then(({ data }) => {
+            form.body = data.content;
             aiButtonLoading.value = false;
         })
-        .catch(err => {
-            console.log(err)
+        .catch((err) => {
+            console.log(err);
             aiButtonLoading.value = false;
-        })
+        });
 }
 
 function fetchPreview(url) {
@@ -198,31 +242,31 @@ function fetchPreview(url) {
         return;
     }
 
-    form.preview_url = url
-    form.preview = {}
+    form.preview_url = url;
+    form.preview = {};
     if (url) {
-        axiosClient.post(route('post.fetchUrlPreview'), {url})
-            .then(({data}) => {
+        axiosClient
+            .post(route("post.fetchUrlPreview"), { url })
+            .then(({ data }) => {
                 form.preview = {
-                    title: data['og:title'],
-                    description: data['og:description'],
-                    image: data['og:image']
-                }
+                    title: data["og:title"],
+                    description: data["og:description"],
+                    image: data["og:image"],
+                };
             })
-            .catch(err => {
-                console.log(err)
-            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 }
 
-
 function onInputChange() {
-    let url = matchHref()
+    let url = matchHref();
 
     if (!url) {
-        url = matchLink()
+        url = matchLink();
     }
-    fetchPreview(url)
+    fetchPreview(url);
 }
 
 function matchHref() {
@@ -250,101 +294,158 @@ function matchLink() {
     if (match && match.length > 0) {
         return match[0];
     }
-    return null
+    return null;
 }
 
 </script>
 
 <template>
-    <BaseModal :title="post.id ? 'Update Post' : 'Create Post'"
-               v-model="show"
-               @hide="closeModal">
+    <BaseModal
+        :title="post.id ? 'Update Post' : 'Create Post'"
+        v-model="show"
+        @hide="closeModal"
+    >
         <div class="p-4">
-            <PostUserHeader :post="post" :show-time="false" class="mb-4 dark:text-gray-100"/>
+            <PostUserHeader
+                :post="post"
+                :show-time="false"
+                class="mb-4 dark:text-gray-100"
+            />
 
-            <div v-if="formErrors.group_id"
-                 class="bg-red-400 py-2 px-3 rounded text-white mb-3">
+            <div
+                v-if="formErrors.group_id"
+                class="bg-red-400 py-2 px-3 rounded text-white mb-3"
+            >
                 {{ formErrors.group_id }}
             </div>
 
             <div class="relative group">
-                <ckeditor :editor="editor" v-model="form.body"
-                          :config="editorConfig" @input="onInputChange"></ckeditor>
+                <!-- make text area ckeditor to rounded -->
+                <ckeditor
+                    :editor="editor"
+                    v-model="form.body"
+                    :config="editorConfig"
+                    @input="onInputChange"
+                ></ckeditor>
 
-                <UrlPreview :preview="form.preview" :url="form.preview_url"/>
+                <UrlPreview :preview="form.preview" :url="form.preview_url" />
 
                 <button
                     @click="getAIContent"
                     :disabled="aiButtonLoading"
-                    class="absolute right-1 top-12 w-8 h-8 p-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white flex justify-center items-center transition-all opacity-0  group-hover:opacity-100 disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:hover:bg-indigo-400">
-                    <svg v-if="aiButtonLoading" class="animate-spin h-4 w-4 text-white"
-                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    class="absolute right-1 top-12 w-8 h-8 p-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white flex justify-center items-center transition-all opacity-0 group-hover:opacity-100 disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:hover:bg-indigo-400"
+                >
+                    <svg
+                        v-if="aiButtonLoading"
+                        class="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        ></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                     </svg>
 
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24"
-                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/>
+                    <svg
+                        v-else
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-4 h-4"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+                        />
                     </svg>
-
                 </button>
             </div>
 
-            <div v-if="showExtensionsText"
-                 class="border-l-4 border-amber-500 py-2 px-3 bg-amber-100 mt-3 text-gray-800">
-                Files must be one of the following extensions <br>
-                <small>{{ attachmentExtensions.join(', ') }}</small>
+            <div
+                v-if="showExtensionsText"
+                class="border-l-4 border-amber-500 py-2 px-3 bg-amber-100 mt-3 text-gray-800"
+            >
+                Files must be one of the following extensions <br />
+                <small>{{ attachmentExtensions.join(", ") }}</small>
             </div>
 
-            <div v-if="formErrors.attachments"
-                 class="border-l-4 border-red-500 py-2 px-3 bg-red-100 mt-3 text-gray-800">
+            <div
+                v-if="formErrors.attachments"
+                class="border-l-4 border-red-500 py-2 px-3 bg-red-100 mt-3 text-gray-800"
+            >
                 {{ formErrors.attachments }}
             </div>
 
-            <div class="grid gap-3 my-3" :class="[
-                                        computedAttachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-                                    ]">
+            <div
+                class="grid gap-3 my-3"
+                :class="[
+                    computedAttachments.length === 1
+                        ? 'grid-cols-1'
+                        : 'grid-cols-2',
+                ]"
+            >
                 <div v-for="(myFile, ind) of computedAttachments">
                     <div
                         class="group aspect-square bg-blue-100 flex flex-col items-center justify-center text-gray-500 relative border-2"
-                        :class="attachmentErrors[ind] ? 'border-red-500' : ''">
-
-                        <div v-if="myFile.deleted"
-                             class="absolute z-10 left-0 bottom-0 right-0 py-2 px-3 text-sm bg-black text-white flex justify-between items-center">
+                        :class="attachmentErrors[ind] ? 'border-red-500' : ''"
+                    >
+                        <div
+                            v-if="myFile.deleted"
+                            class="absolute z-10 left-0 bottom-0 right-0 py-2 px-3 text-sm bg-black text-white flex justify-between items-center"
+                        >
                             To be deleted
 
-                            <ArrowUturnLeftIcon @click="undoDelete(myFile)"
-                                                class="w-4 h-4 cursor-pointer"/>
+                            <ArrowUturnLeftIcon
+                                @click="undoDelete(myFile)"
+                                class="w-4 h-4 cursor-pointer"
+                            />
                         </div>
 
                         <button
                             @click="removeFile(myFile)"
-                            class="absolute z-20 right-3 top-3 w-7 h-7 flex items-center justify-center bg-black/30 text-white rounded-full hover:bg-black/40">
-                            <XMarkIcon class="h-5 w-5"/>
+                            class="absolute z-20 right-3 top-3 w-7 h-7 flex items-center justify-center bg-black/30 text-white rounded-full hover:bg-black/40"
+                        >
+                            <XMarkIcon class="h-5 w-5" />
                         </button>
 
-                        <img v-if="isImage(myFile.file || myFile)"
-                             :src="myFile.url"
-                             class="object-contain aspect-square"
-                             :class="myFile.deleted ? 'opacity-50' : ''"/>
-                        <div v-else class="flex flex-col justify-center items-center px-3"
-                             :class="myFile.deleted ? 'opacity-50' : ''">
-                            <PaperClipIcon class="w-10 h-10 mb-3"/>
+                        <img
+                            v-if="isImage(myFile.file || myFile)"
+                            :src="myFile.url"
+                            class="object-contain aspect-square"
+                            :class="myFile.deleted ? 'opacity-50' : ''"
+                        />
+
+                        <div
+                            v-else
+                            class="flex flex-col justify-center items-center px-3"
+                            :class="myFile.deleted ? 'opacity-50' : ''"
+                        >
+                            <PaperClipIcon class="w-10 h-10 mb-3" />
 
                             <small class="text-center">
                                 {{ (myFile.file || myFile).name }}
                             </small>
                         </div>
                     </div>
-                    <small class="text-red-500">{{ attachmentErrors[ind] }}</small>
+                    <small class="text-red-500">{{
+                        attachmentErrors[ind]
+                    }}</small>
                 </div>
             </div>
-
         </div>
 
         <div class="flex gap-2 py-3 px-4">
@@ -352,20 +453,34 @@ function matchLink() {
                 type="button"
                 class="flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-full relative"
             >
-                <PaperClipIcon class="w-4 h-4 mr-2"/>
-                Attach Files
-                <input @click.stop @change="onAttachmentChoose" type="file" multiple
-                       class="absolute left-0 top-0 right-0 bottom-0 opacity-0">
+                <PaperClipIcon class="w-4 h-4 mr-2" />
+                <PhotoIcon class="w-5 h-5 mr-2" />
+                <VideoCameraIcon class="w-5 h-5 mr-2" />
+                <input
+                    @click.stop
+                    @change="onAttachmentChoose"
+                    type="file"
+                    multiple
+                    class="absolute left-0 top-0 right-0 bottom-0 opacity-0"
+                />
             </button>
+            <!-- tombol submit -->
             <button
                 type="button"
                 class="flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-full"
                 @click="submit"
+                :disabled="form.processing"
             >
-                <BookmarkIcon class="w-4 h-4 mr-2"/>
-                Submit
+
+                <span v-if="form.processing">
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="#1C64F2"/>
+    </svg>
+    Loading...
+                </span>
+                <span v-else>Submit</span>
             </button>
         </div>
     </BaseModal>
 </template>
-

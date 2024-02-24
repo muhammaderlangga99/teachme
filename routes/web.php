@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\GroupController;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\TeachController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,9 +63,12 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/change-role/{group:slug}', [GroupController::class, 'changeRole'])
             ->name('group.changeRole');
+
+        Route::delete('/{group:slug}', [GroupController::class, 'destroy'])
+            ->name('group.destroy');
     });
 
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/update-images', [ProfileController::class, 'updateImage'])
@@ -118,6 +122,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/{search?}', [SearchController::class, 'search'])
         ->name('search');
 
+
+    // teachme
+    Route::get('/teachme', [TeachController::class, 'index']);
 });
 
 require __DIR__ . '/auth.php';
