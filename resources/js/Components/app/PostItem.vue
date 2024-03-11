@@ -2,6 +2,7 @@
 import {
     ChatBubbleLeftRightIcon,
     HandThumbUpIcon,
+    HeartIcon,
 } from "@heroicons/vue/24/outline";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
@@ -95,11 +96,12 @@ function sendReaction() {
             props.post.num_of_reactions = data.num_of_reactions;
         });
 }
+
 </script>
 
 <template>
     <div
-        class="bg-white border dark:bg-slate-950 dark:border-slate-900 dark:text-gray-100 rounded-2xl p-4 mb-3"
+        class="bg-white border shadow dark:bg-slate-950 dark:border-slate-900 dark:text-gray-100 rounded-2xl p-4 mb-3"
     >
         <div class="flex items-center justify-between mb-3">
             <PostUserHeader :post="post" />
@@ -134,22 +136,27 @@ function sendReaction() {
         </div>
         <Disclosure v-slot="{ open }">
             <!--            Like & Comment buttons-->
+            <!-- jangan beri nilai null pada jumlah reaction ketika -->
             <div class="flex gap-2">
                 <button
                     @click="sendReaction"
-                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center rounded-lg py-2 px-4 flex-1"
+                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center rounded-full py-2.5 px-4 flex-1"
                     :class="[
                         post.current_user_has_reaction
-                            ? 'bg-sky-100 dark:bg-sky-900 hover:bg-sky-200 dark:hover:bg-sky-950'
+                            ? 'bg-sky-100 dark:bg-sky-950 hover:bg-sky-200 dark:hover:bg-sky-950 border border-sky-300'
                             : 'bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 ',
                     ]"
                 >
-                    <HandThumbUpIcon class="w-5 h-5" />
-                    <span class="mr-2">{{ post.num_of_reactions }}</span>
-                    {{ post.current_user_has_reaction ? "Unlike" : "Like" }}
+                    <HeartIcon :class="[
+                        post.current_user_has_reaction
+                            ? 'fill-red-600 dark:fill-red-600 w-5 stroke-none'
+                            : 'w-5 ',
+                    ]" />
+                    <p class="mr-0.5">{{ post.num_of_reactions }}</p>
+                    {{ post.current_user_has_reaction ? "Unlike" : "Suka" }}
                 </button>
                 <DisclosureButton
-                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 rounded-lg hover:bg-gray-200 py-2 px-4 flex-1"
+                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 rounded-full hover:bg-gray-200 py-2.5 px-4 flex-1"
                 >
                     <ChatBubbleLeftRightIcon class="w-5 h-5" />
                     <span class="mr-2">{{ post.num_of_comments }}</span>

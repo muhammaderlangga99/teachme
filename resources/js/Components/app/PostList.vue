@@ -82,6 +82,8 @@ onMounted(() => {
 });
 </script>
 
+<!-- template berfungsi untuk membentuk sebuah component pada vue js -->
+
 <template>
     <div class="overflow-auto scrollbar-hide rounded-2xl">
         <PostItem

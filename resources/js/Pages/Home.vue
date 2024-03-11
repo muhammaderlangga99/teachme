@@ -11,6 +11,8 @@ defineProps({
     groups: Array,
     followings: Array,
 });
+
+
 </script>
 
 <template>
@@ -18,7 +20,7 @@ defineProps({
 
     <AuthenticatedLayout>
         <!-- <pre>{{ posts }}</pre> -->
-        <div class="grid lg:grid-cols-12 gap-3 p-4 h-full">
+        <!-- <div class="grid lg:grid-cols-12 gap-3 p-4 h-full">
             <div class="lg:col-span-3 lg:order-1 h-full overflow-hidden">
                 <GroupList :groups="groups" />
             </div>
@@ -31,6 +33,25 @@ defineProps({
                 <CreatePost />
                 <PostList :posts="posts.data" class="flex-1" />
             </div>
+        </div> -->
+        <div class="mt-4 min-h-screen">
+            <!-- left -->
+            <div class="max-w-3xl overflow-hidden px-3 fixed hidden lg:inline-block">
+                <GroupList :groups="groups" />
+            </div>
+
+            <div
+            class="m-auto px-2 lg:px-0 max-w-xl lg:order-2 h-full overflow-hidden flex flex-col"
+            >
+                <!-- <div class="mb-2">
+                    <GroupList :groups="groups" />
+                </div> -->
+                <CreatePost />
+            
+                <PostList :posts="posts.data" class="flex-1" />
+            </div>
+
+
         </div>
     </AuthenticatedLayout>
 </template>

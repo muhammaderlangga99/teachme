@@ -13,7 +13,7 @@ defineEmits(["attachmentClick"]);
     <template v-for="(attachment, ind) of attachments.slice(0, 4)">
         <div
             @click="$emit('attachmentClick', ind)"
-            class="group bg-slate-100 relative cursor-pointer"
+            class="group bg-slate-100 relative cursor-pointer rounded-xl overflow-hidden"
         >
             <div
                 v-if="ind === 3 && attachments.length > 4"

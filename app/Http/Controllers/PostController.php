@@ -41,8 +41,7 @@ class PostController extends Controller
         $post->loadCount('reactions');
         $post->load([
             'comments' => function ($query) {
-                $query->withCount('reactions'); // SELECT * FROM comments WHERE post_id IN (1, 2, 3...)
-                // SELECT COUNT(*) from reactions
+                $query->withCount('reactions');
             },
         ]);
 
@@ -56,19 +55,19 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $data = $request->validated();
-        $user = $request->user();
+        $data = $request->validated(); // ambil data array dari request
+        $user = $request->user(); // ambil user yang sedang login
 
         DB::beginTransaction();
-        $allFilePaths = [];
+        $allFilePaths = []; // array untuk menyimpan path dari file yang diupload
         try {
-            $post = Post::create($data);
+            $post = Post::create($data); // buat post baru
 
             /** @var \Illuminate\Http\UploadedFile[] $files */
-            $files = $data['attachments'] ?? [];
-            foreach ($files as $file) {
-                $path = $file->store('attachments/' . $post->id, 'public');
-                $allFilePaths[] = $path;
+            $files = $data['attachments'] ?? []; // ambil file yang diupload dari request
+            foreach ($files as $file) { // loop setiap file yang diupload
+                $path = $file->store('attachments/' . $post->id, 'public'); // simpan file ke storage
+                $allFilePaths[] = $path; // jadinya $allFilePaths = ['attachments/1/abc.jpg', 'attachments/1/def.jpg']
                 PostAttachment::create([
                     'post_id' => $post->id,
                     'name' => $file->getClientOriginalName(),
@@ -172,6 +171,12 @@ class PostController extends Controller
         return response("You don't have permission to delete this post", 403);
     }
 
+
+    // =================================================================================================
+    // =================================================================================================
+    // =================================================================================================
+
+
     public function downloadAttachment(PostAttachment $attachment)
     {
         // TODO check if user has permission to download that attachment
@@ -191,13 +196,13 @@ class PostController extends Controller
             ->where('object_type', Post::class)
             ->first();
 
-        if ($reaction) {
-            $hasReaction = false;
-            $reaction->delete();
+        if ($reaction) { // jika user sudah memberikan reaction
+            $hasReaction = false; // set hasReaction menjadi false
+            $reaction->delete(); // hapus reaction yang sudah ada
         } else {
-            $hasReaction = true;
-            Reaction::create([
-                'object_id' => $post->id,
+            $hasReaction = true; // set hasReaction menjadi true
+            Reaction::create([ // buat reaction baru
+                'object_id' => $post->id, // set object_id menjadi id dari post
                 'object_type' => Post::class,
                 'user_id' => $userId,
                 'type' => $data['reaction']
@@ -205,17 +210,54 @@ class PostController extends Controller
 
             if (!$post->isOwner($userId)) {
                 $user = User::where('id', $userId)->first();
-                $post->user->notify(new ReactionAddedOnPost($post, $user));
             }
         }
-
         $reactions = Reaction::where('object_id', $post->id)->where('object_type', Post::class)->count();
+
 
         return response([
             'num_of_reactions' => $reactions,
             'current_user_has_reaction' => $hasReaction
         ]);
     }
+
+    // public function commentReaction(Request $request, Comment $comment)
+    // {
+    //     $data = $request->validate([
+    //         'reaction' => [Rule::enum(ReactionEnum::class)]
+    //     ]);
+
+    //     $userId = Auth::id();
+    //     $reaction = Reaction::where('user_id', $userId)
+    //         ->where('object_id', $comment->id)
+    //         ->where('object_type', Comment::class)
+    //         ->first();
+
+    //     if ($reaction) {
+    //         $hasReaction = false;
+    //         $reaction->delete();
+    //     } else {
+    //         $hasReaction = true;
+    //         Reaction::create([
+    //             'object_id' => $comment->id,
+    //             'object_type' => Comment::class,
+    //             'user_id' => $userId,
+    //             'type' => $data['reaction']
+    //         ]);
+
+    //         if ($u(!$comment->isOwnerserId)) {
+    //             $user = User::where('id', $userId)->first();
+    //             // $comment->user->notify(new ReactionAddedOnComment($comment->post, $comment, $user));
+    //         }
+    //     }
+
+    //     $reactions = Reaction::where('object_id', $comment->id)->where('object_type', nt();
+
+    //     return response([
+    //         'num_of_reactions' => $reactions,
+    //         'current_user_has_reaction' => $hasReaction
+    //     ]);
+    // }
 
     public function createComment(Request $request, Post $post)
     {
@@ -232,7 +274,7 @@ class PostController extends Controller
         ]);
 
         $post = $comment->post;
-        $post->user->notify(new CommentCreated($comment, $post));
+        // $post->user->notify(new CommentCreated($comment, $post));
 
         return response(new CommentResource($comment), 201);
     }
@@ -296,7 +338,7 @@ class PostController extends Controller
 
             if (!$comment->isOwner($userId)) {
                 $user = User::where('id', $userId)->first();
-                $comment->user->notify(new ReactionAddedOnComment($comment->post, $comment, $user));
+                // $comment->user->notify(new ReactionAddedOnComment($comment->post, $comment, $user));
             }
         }
 

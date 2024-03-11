@@ -111,6 +111,10 @@ function submitAvatarImage() {
     })
 }
 
+const form = useForm({
+    follow: ""
+})
+
 function followUser() {
     const form = useForm({
         follow: !props.isCurrentUserFollower

@@ -8,7 +8,7 @@ defineProps({
 <template>
     <a :href="url" target="_blank"
        v-if="preview && preview.title"
-       class="block mt-4 border border-indigo-200 bg-indigo-50">
+       class="block mt-4 border border-indigo-200 bg-indigo-50 rounded-xl overflow-hidden">
         <img :src="preview.image"
              class="max-w-full"
              :alt="preview.title"/>

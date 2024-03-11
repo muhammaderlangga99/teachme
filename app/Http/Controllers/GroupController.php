@@ -46,19 +46,26 @@ class GroupController extends Controller
 
         $userId = Auth::id();
 
-        if ($group->hasApprovedUser($userId)) {
-            $posts = Post::postsForTimeline($userId, false)
-                ->leftJoin('groups AS g', 'g.pinned_post_id', 'posts.id')
-                ->where('group_id', $group->id)
-                ->orderBy('g.pinned_post_id', 'desc')
-                ->orderBy('posts.created_at', 'desc')
-                ->paginate(10);
-            $posts = PostResource::collection($posts);
-        } else {
-            return Inertia::render('Group/View', [
-                'success' => session('success'),
-                'group' => new GroupResource($group),
-                'posts' => null,
+        if ($group->hasApprovedUser($userId)) { // user is approved
+            $posts = Post::postsForTimeline($userId, false) // ambil post yang di share oleh user itu sendiri
+                ->leftJoin('groups AS g', 'g.pinned_post_id', 'posts.id') // join dengan group
+                ->where('group_id', $group->id) // ambil post yang di share di group ini
+                ->orderBy('g.pinned_post_id', 'desc') // urutkan berdasarkan pinned post
+                ->orderBy('posts.created_at', 'desc') // urutkan berdasarkan created_at
+                ->paginate(10); // limit 10 post per page
+            $posts = PostResource::collection($posts);  // ambil data post yang di share oleh user itu sendiri
+        } else { // user is not approved
+            $posts = Post::postsForTimeline($userId, false) // ambil post yang di share oleh user itu sendiri
+                ->leftJoin('groups AS g', 'g.pinned_post_id', 'posts.id') // join dengan group
+                ->where('group_id', $group->id) // ambil post yang di share di group ini
+                ->orderBy('g.pinned_post_id', 'desc') // urutkan berdasarkan pinned post
+                ->orderBy('posts.created_at', 'desc') // urutkan berdasarkan created_at
+                ->paginate(10); // limit 10 post per page
+            $posts = PostResource::collection($posts);  // ambil data post yang di share oleh user itu sendiri
+            return Inertia::render('Group/View', [ // tampilkan halaman group
+                'success' => session('success'), // tampilkan pesan sukses
+                'group' => new GroupResource($group), // tampilkan data group
+                'posts' => $posts, // tampilkan data post
                 'users' => [],
                 'requests' => []
             ]);

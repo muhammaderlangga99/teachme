@@ -18,7 +18,7 @@ defineProps({
         <Link :href="route('profile', post.user.username)">
             <img
                 :src="post.user.avatar_url"
-                class="w-[40px] h-[40px] rounded-full border-2 transition-all hover:border-blue-500"
+                class="w-[40px] h-[40px] object-cover rounded-full border-2 transition-all hover:border-blue-500"
             />
         </Link>
         <div>
@@ -30,7 +30,7 @@ defineProps({
                     {{ post.user.name }}
                 </Link>
                 <template v-if="post.group">
-                    <ChevronRightIcon class="w-4" />
+                    <ChevronRightIcon class="w-4 stroke-2 font-bold" />
                     <Link
                         :href="route('group.profile', post.group.slug)"
                         class="hover:underline"

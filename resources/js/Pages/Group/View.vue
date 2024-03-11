@@ -401,7 +401,7 @@ function updateGroup() {
 
                     <TabPanels class="mt-2">
                         <TabPanel>
-                            <template v-if="posts">
+                            <template v-if="posts && isJoinedToGroup">
                                 <CreatePost :group="group" />
                                 <PostList
                                     v-if="posts.data.length"
@@ -416,11 +416,30 @@ function updateGroup() {
                                     first and create it.
                                 </div>
                             </template>
+
+                            
                             <div
-                                v-else
+                                v-if="!isJoinedToGroup && !group.auto_approval"
                                 class="py-8 text-center dark:text-gray-100"
                             >
                                 You don't have permission to view these posts.
+                            </div>
+                            <div v-if="!isJoinedToGroup && group.auto_approval">
+                                <template v-if="posts">
+                                    <!-- <CreatePost :group="group" /> -->
+                                    <PostList
+                                        v-if="posts.data.length"
+                                        :posts="posts.data"
+                                        class="flex-1"
+                                    />
+                                    <div
+                                        v-else
+                                        class="py-8 text-center dark:text-gray-100"
+                                    >
+                                        There are no posts in this group. Be the
+                                        first and create it.
+                                    </div>
+                                </template>
                             </div>
                         </TabPanel>
                         <TabPanel v-if="isJoinedToGroup">

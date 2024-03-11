@@ -10,6 +10,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TeachController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RelasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +126,9 @@ Route::middleware('auth')->group(function () {
 
     // teachme
     Route::get('/teachme', [TeachController::class, 'index']);
+
+    // Relasi
+    Route::get('/relasi', [RelasiController::class, 'index']);
 });
 
 require __DIR__ . '/auth.php';

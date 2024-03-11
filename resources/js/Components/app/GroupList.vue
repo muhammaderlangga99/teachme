@@ -9,9 +9,9 @@ defineProps({
 
 <template>
     <div
-        class="px-3 bg-white rounded-2xl dark:bg-slate-950 border dark:border-slate-900 dark:text-gray-100 h-full py-3 overflow-hidden"
+        class="bg-transparent rounded-2xl dark:text-gray-100 h-full py-3 overflow-hidden"
     >
-        <h3 class="text-center mb-2 font-semibold">Ruang Diskusi</h3>
+        <h3 class="mb-5 font-semibold ml-2">Ruang Diskusi</h3>
         <!-- <div class="block lg:hidden">
             <Disclosure v-slot="{ open }">
                 <DisclosureButton class="w-full">

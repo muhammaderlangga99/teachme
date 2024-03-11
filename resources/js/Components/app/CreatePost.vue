@@ -42,11 +42,11 @@ function ambilKataKedua(kalimat) {
 <template>
     <div
         @click="showCreatePostModal"
-        class="py-3 px-3 border-2 border-gray-200 dark:border-slate-900 text-gray-500 rounded-2xl w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-slate-950 hover:border-blue-500 dark:hover:border-blue-500 mb-3"
+        class="py-3 px-3 border-2 border-gray-200 dark:border-slate-900 text-gray-500 rounded-full w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-slate-950 hover:border-blue-500 dark:hover:border-blue-500 mb-2"
     >
         <img
             :src="authUser.avatar_url"
-            class="w-[40px] h-[40px] rounded-full border-2 transition-all hover:border-blue-500"
+            class="w-[40px] h-[40px] rounded-full border-2 object-cover transition-all hover:border-blue-500"
         />
 
         <div class="flex-1">
@@ -58,7 +58,9 @@ function ambilKataKedua(kalimat) {
             </div>
         </div>
 
-        <PhotoIcon class="w-7 h-7 text-gray-800 dark:text-gray-300 rotate-12" />
+        <img src="/img/books.png" class="w-9 h-9 md:w-12 md:h-12" alt="">
+
+        <!-- <PhotoIcon class="w-7 h-7 text-gray-800 dark:text-gray-300 rotate-12" /> -->
     </div>
 
     <PostModal :post="newPost" :group="group" v-model="showModal" />

@@ -44,8 +44,8 @@ class HomeController extends Controller
             return $posts;
         }
 
-        // get 5 groups from oldest to newest
-        $groups = Group::query()
+        // get 5 groups from oldest to newes
+        $groups = Group::query() // query dari database sql
             ->orderBy('created_at', 'asc')
             ->limit(5)
             ->get();
@@ -59,10 +59,10 @@ class HomeController extends Controller
         // ->orderBy('name', 'desc')
         // ->get();
 
-
         return Inertia::render('Home', [
             'posts' => $posts,
             'groups' => GroupResource::collection($groups),
+            // 'users' => UserResource::collection($user->followers),
             'followings' => UserResource::collection($user->followings)
         ]);
     }
