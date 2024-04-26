@@ -42,16 +42,16 @@ function ambilKataKedua(kalimat) {
 <template>
     <div
         @click="showCreatePostModal"
-        class="py-3 px-3 border-2 border-gray-200 dark:border-slate-900 text-gray-500 rounded-full w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-slate-950 hover:border-blue-500 dark:hover:border-blue-500 mb-2"
+        class="py-3 px-3 border-y-[0.5px] md:border border-gray-200 dark:border-zinc-900 md:dark:bg-zinc-950 text-gray-500 md:rounded-full w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-black hover:border-blue-500 dark:hover:border-blue-500 mb-1 md:mb-1.5"
     >
         <img
             :src="authUser.avatar_url"
-            class="w-[40px] h-[40px] rounded-full border-2 object-cover transition-all hover:border-blue-500"
+            class="w-[40px] h-[40px] rounded-full border-2  object-cover transition-all border-blue-500"
         />
 
         <div class="flex-1">
             <div
-                class="text-sm font-semibold bg-slate-100 dark:text-gray-300 dark:bg-slate-900 p-2 rounded-full"
+                class="text-sm font-semibold bg-slate-100 dark:text-gray-300 dark:bg-zinc-950 md:dark:bg-zinc-800 p-2 rounded-full"
             >
                 tuliskan apapun
                 {{ ambilKataKedua(authUser.name) }}

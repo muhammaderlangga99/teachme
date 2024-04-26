@@ -13,7 +13,7 @@ defineEmits(["attachmentClick"]);
     <template v-for="(attachment, ind) of attachments.slice(0, 4)">
         <div
             @click="$emit('attachmentClick', ind)"
-            class="group bg-slate-100 relative cursor-pointer rounded-xl overflow-hidden"
+            class="group bg-transparent relative cursor-pointer rounded-xl overflow-hidden"
         >
             <div
                 v-if="ind === 3 && attachments.length > 4"
@@ -64,7 +64,7 @@ defineEmits(["attachmentClick"]);
                 <div
                     class="absolute left-0 top-0 w-full h-full bg-black/70 z-10"
                 ></div>
-                <video :src="attachment.url" class="bg-red-500"></video>
+                <video :src="attachment.url"></video>
             </div>
             <div v-else class="flex flex-col justify-center items-center">
                 <PaperClipIcon class="w-10 h-10 mb-3" />

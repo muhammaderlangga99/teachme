@@ -17,7 +17,7 @@ function limitWords(text, limit) {
 
 <template>
     <div
-        class="cursor-pointer w-full bg-slate-200 dark:bg-slate-900  hover:bg-gray-300 dark:hover:bg-slate-950 rounded-full"
+        class="cursor-pointer w-full hover:bg-zinc-200 dark:hover:bg-zinc-900 duration-300 rounded-full"
     >
         <Link
             :href="route('group.profile', group.slug)"
@@ -30,7 +30,7 @@ function limitWords(text, limit) {
             <div class="flex-1 flex flex-col pr-2">
                     <h3 class="font-semibold">{{ group.name }}</h3>
                     <div class="flex">
-                        <span class="text-xs text-gray-500">{{ limitWords(group.description, 5) }} </span>
+                        <!-- <span class="text-xs text-gray-500">{{ limitWords(group.description, 5) }} </span> -->
                         <!-- <span class="text-xs text-gray-500">{{ group. }} members</span> -->
                     </div>
                  <!-- <span class="text-xs text-center">

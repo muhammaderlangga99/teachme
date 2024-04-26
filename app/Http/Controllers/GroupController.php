@@ -208,7 +208,7 @@ class GroupController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        $user->notify(new InvitationInGroup($group, $hours, $token));
+        // $user->notify(new InvitationInGroup($group, $hours, $token));
 
 
         return back()->with('success', 'User was invited to join to group');
@@ -239,7 +239,7 @@ class GroupController extends Controller
 
         $adminUser = $groupUser->adminUser;
 
-        $adminUser->notify(new InvitationApproved($groupUser->group, $groupUser->user));
+        // $adminUser->notify(new InvitationApproved($groupUser->group, $groupUser->user));
 
         return redirect(route('group.profile', $groupUser->group))
             ->with('success', 'You accepted to join to group "' . $groupUser->group->name . '"');
@@ -254,7 +254,8 @@ class GroupController extends Controller
         if (!$group->auto_approval) {
             $status = GroupUserStatus::PENDING->value;
 
-            Notification::send($group->adminUsers, new RequestToJoinGroup($group, $user));
+            // Notification::send($group->adminUsers, new RequestToJoinGroup($group, $user));
+
             $successMessage = 'Your request has been accepted. You will be notified once you will be approved';
         }
 
@@ -296,7 +297,7 @@ class GroupController extends Controller
             $groupUser->save();
 
             $user = $groupUser->user;
-            $user->notify(new RequestApproved($groupUser->group, $user, $approved));
+            // $user->notify(new RequestApproved($groupUser->group, $user, $approved));
 
             return back()->with('success', 'User "' . $user->name . '" was ' . ($approved ? 'approved' : 'rejected'));
         }
@@ -327,7 +328,7 @@ class GroupController extends Controller
             $user = $groupUser->user;
             $groupUser->delete();
 
-            $user->notify(new UserRemovedFromGroup($group));
+            // $user->notify(new UserRemovedFromGroup($group));
         }
 
         return back();
@@ -357,7 +358,7 @@ class GroupController extends Controller
             $groupUser->role = $data['role'];
             $groupUser->save();
 
-            $groupUser->user->notify(new RoleChanged($group, $data['role']));
+            // $groupUser->user->notify(new RoleChanged($group, $data['role']));
         }
 
         return back();

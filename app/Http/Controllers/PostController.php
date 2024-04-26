@@ -162,7 +162,7 @@ class PostController extends Controller
             $post->delete();
 
             if (!$post->isOwner($id)) {
-                $post->user->notify(new PostDeleted($post->group));
+                // $post->user->notify(new PostDeleted($post->group));
             }
 
             return back();
@@ -291,7 +291,7 @@ class PostController extends Controller
             $comment->delete();
 
             if (!$comment->isOwner($id)) {
-                $comment->user->notify(new CommentDeleted($comment, $post));
+                // $comment->user->notify(new CommentDeleted($comment, $post));
             }
 
 

@@ -24,6 +24,11 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
+        <h1 class="text-2xl font-bold dark:text-white">Buat akun TeachMe</h1>
+        <div class="dark:text-gray-100 text-sm mb-8">
+            <span class="text-gray-400">Buat relasi dengan guru lain dan ciptakan perubahan dunia pendidikan!</span>
+        </div>
+
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="name" value="Name" />

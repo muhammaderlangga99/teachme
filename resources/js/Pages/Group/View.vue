@@ -4,6 +4,14 @@ import {
     XMarkIcon,
     CheckCircleIcon,
     CameraIcon,
+    UserGroupIcon,
+    EyeIcon,
+    EyeSlashIcon,
+    TrashIcon,
+    InformationCircleIcon,
+    LockOpenIcon,
+    LockClosedIcon,
+    UserCircleIcon
 } from "@heroicons/vue/24/solid";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { usePage } from "@inertiajs/vue3";
@@ -19,11 +27,13 @@ import GroupForm from "@/Components/app/GroupForm.vue";
 import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import TabPhotos from "@/Pages/Profile/TabPhotos.vue";
+import ReadMoreReadLess from "@/Components/app/ReadMoreReadLess.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
     cover: null,
 });
+
 
 const showNotification = ref(true);
 const coverImageSrc = ref("");
@@ -179,12 +189,36 @@ function updateGroup() {
         preserveScroll: true,
     });
 }
+
+// function for count group member
+function countGroupMember() {
+    const users = usePage().props.users; // get users from props
+    return users.length
+}
+
+// get image users from props
+const imageUser = computed(() => {
+    const users = usePage().props.users; // get users from props
+    users.filter((user, index) => index < 8).map((user) => {
+        if (!user.avatar_url) {
+            return '/img/default_avatar.webp';
+        }
+        return user.avatar_url;
+    });
+});
+
+console.log(imageUser.value);
+
+
+
+
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <div class="max-w-[768px] mx-auto h-full overflow-auto">
-            <div class="px-4">
+        <!-- <div class="max-w-[768px] min-h-screen mx-auto h-full overflow-auto"> -->
+        <div class="min-h-screen mx-auto h-full overflow-auto">
+            <div class="">
                 <div
                     v-show="showNotification && success"
                     class="my-2 py-2 px-3 font-medium text-sm bg-emerald-500 text-white"
@@ -198,7 +232,7 @@ function updateGroup() {
                     {{ errors.cover }}
                 </div>
                 <div
-                    class="group relative bg-white dark:bg-slate-950 dark:text-gray-100"
+                    class="group relative bg-white dark:bg-black md:dark:bg-zinc-950 dark:text-gray-100"
                 >
                     <img
                         :src="
@@ -264,7 +298,7 @@ function updateGroup() {
                         </div>
                     </div>
 
-                    <div class="flex">
+                    <div class="flex flex-col max-w-4xl m-auto">
                         <!-- for image -->
                         <div
                             class="flex items-center justify-center relative group/thumbnail -mt-[64px] w-[128px] translate-x-4 h-[128px] rounded-full"
@@ -312,36 +346,86 @@ function updateGroup() {
                         <!-- for image -->
 
                         <div
-                            class="flex justify-between items-center flex-1 p-4"
+                            class="flex flex-wrap gap-y-2 items-start md:justify-between m-auto w-full md:items-center p-4"
                         >
-                            <h2 class="font-bold text-lg">{{ group.name }}</h2>
+                            <div>
+                                <h2 class="font-extrabold text-xl">{{ group.name }}</h2>
+                                <span class="flex gap-1">
+                                    <p
+                                        class="text-sm text-slate-500"
+                                    >
+                                        <span v-if="group.auto_approval" class="flex items-center">
+                                            <EyeIcon class="w-3 mr-1 py-1 inline"/>
+                                            Grup Publik
+                                        </span>
+                                        <span v-else class="flex items-center">
+                                            <EyeSlashIcon class="w-3 mr-1 py-1 inline"/>
+                                            Grup Privat
+                                        </span>
+                                    </p>
 
-                            <PrimaryButton
-                                v-if="!authUser"
-                                :href="route('login')"
-                            >
-                                Login to join to this group
-                            </PrimaryButton>
+                                    <!-- member -->
+                                    ·
+                                    <span
+                                        v-if="group.role"
+                                        class="text-sm text-slate-500"
+                                    >
+                                        {{ countGroupMember() }} Members
 
-                            <div class="flex gap-2">
+                                        <span
+                                            v-if="group.num_of_users > 0"
+                                            class="text-xs text-slate-500"
+                                        >
+                                            &middot;
+                                            <span
+                                                v-if="group.num_of_users > 1"
+                                                class="text-xs text-slate-500"
+                                            >
+                                                {{ group.num_of_posts }} Posts
+                                            </span>
+                                            <span
+                                                v-else
+                                                class="text-xs text-slate-500"
+                                            >
+                                                {{ group.num_of_posts }} Post
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </div>
+
+                            
+
+                            <div class="flex gap-2 w-full md:w-auto">
                                 <div>
                                     <button
                                         @click="showDeleteGroupModal = true"
                                         v-if="isCurrentUserAdmin"
-                                        class="text-red-600 dark:text-red-400 font-semibold text-xs bg-red-100 hover:bg-red-600 dark:bg-red-950 dark:hover:bg-red-900 h-full px-2 rounded-lg hover:text-slate-100 dark:hover:text-slate-300 transition-all uppercase"
+                                        class="text-red-600 dark:text-red-400 font-semibold text-xs bg-red-100 hover:bg-red-600 dark:bg-red-950 dark:hover:bg-red-900 h-full p-4 rounded-full hover:text-slate-100 dark:hover:text-slate-300 transition-all uppercase" title="hapus grup"
                                     >
-                                        hapus grup
+                                        <TrashIcon class="w-5" />
                                     </button>
                                 </div>
 
-                                <PrimaryButton
+                                <PrimaryButton class="m-auto w-full flex justify-center"
+                                        v-if="!authUser"
+                                        :href="route('login')"
+                                    >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+                                    </svg>
+                                    Login
+                                </PrimaryButton>
+
+                                <PrimaryButton class="m-auto w-full flex justify-center"
                                     v-if="isCurrentUserAdmin"
                                     @click="showInviteUserModal = true"
                                 >
+                                <UserGroupIcon class="w-4 mr-1 py-1"/>
                                     Invite Users
                                 </PrimaryButton>
 
-                                <PrimaryButton
+                                <PrimaryButton class="m-auto w-full flex justify-center"
                                     v-if="
                                         authUser &&
                                         !group.role &&
@@ -349,9 +433,11 @@ function updateGroup() {
                                     "
                                     @click="joinToGroup"
                                 >
-                                    Join to Group
+                                <UserGroupIcon class="w-4 mr-1 py-1"/>
+
+                                    Gabung ke Grup
                                 </PrimaryButton>
-                                <PrimaryButton
+                                <PrimaryButton class="m-auto w-full flex justify-center"
                                     v-if="
                                         authUser &&
                                         !group.role &&
@@ -359,149 +445,244 @@ function updateGroup() {
                                     "
                                     @click="joinToGroup"
                                 >
-                                    Request to join
+                                <UserGroupIcon class="w-4 mr-1 py-1"/>
+                                    minta bergabung
                                 </PrimaryButton>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="border-t m-4 mt-0">
+            <!-- pemisah tab -->
+            <div>
+            <!-- <div class=" mx-4 mt-0"> -->
                 <TabGroup>
-                    <TabList
-                        class="flex bg-white dark:bg-slate-950 dark:text-white"
-                    >
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Posts" :selected="selected" />
-                        </Tab>
-                        <Tab
-                            v-if="isJoinedToGroup"
-                            v-slot="{ selected }"
-                            as="template"
+                    <div class="bg-white dark:bg-black md:dark:bg-zinc-950 overflow-auto scrollbar-hide">
+                        <TabList
+                            class="flex w-[130vw] overflow-x-auto m-auto md:max-w-4xl dark:bg-black md:dark:bg-zinc-950 dark:text-white"
                         >
-                            <TabItem text="Users" :selected="selected" />
-                        </Tab>
-                        <Tab
-                            v-if="isCurrentUserAdmin"
-                            v-slot="{ selected }"
-                            as="template"
-                        >
-                            <TabItem
-                                text="Pending Requests"
-                                :selected="selected"
-                            />
-                        </Tab>
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Photos" :selected="selected" />
-                        </Tab>
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="About" :selected="selected" />
-                        </Tab>
-                    </TabList>
-
-                    <TabPanels class="mt-2">
-                        <TabPanel>
-                            <template v-if="posts && isJoinedToGroup">
-                                <CreatePost :group="group" />
-                                <PostList
-                                    v-if="posts.data.length"
-                                    :posts="posts.data"
-                                    class="flex-1"
-                                />
-                                <div
-                                    v-else
-                                    class="py-8 text-center dark:text-gray-100"
-                                >
-                                    There are no posts in this group. Be the
-                                    first and create it.
-                                </div>
-                            </template>
-
-                            
-                            <div
-                                v-if="!isJoinedToGroup && !group.auto_approval"
-                                class="py-8 text-center dark:text-gray-100"
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Posts" :selected="selected" />
+                            </Tab>
+                            <Tab
+                                v-if="isJoinedToGroup"
+                                v-slot="{ selected }"
+                                as="template"
                             >
-                                You don't have permission to view these posts.
-                            </div>
-                            <div v-if="!isJoinedToGroup && group.auto_approval">
-                                <template v-if="posts">
-                                    <!-- <CreatePost :group="group" /> -->
-                                    <PostList
-                                        v-if="posts.data.length"
-                                        :posts="posts.data"
-                                        class="flex-1"
-                                    />
-                                    <div
-                                        v-else
-                                        class="py-8 text-center dark:text-gray-100"
-                                    >
-                                        There are no posts in this group. Be the
-                                        first and create it.
+                                <TabItem text="Orang" :selected="selected" />
+                            </Tab>
+                            <Tab
+                                v-if="isCurrentUserAdmin"
+                                v-slot="{ selected }"
+                                as="template"
+                            >
+                                <TabItem
+                                    text="Pending Requests"
+                                    :selected="selected"
+                                />
+                            </Tab>
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Photos" :selected="selected" />
+                            </Tab>
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="About" :selected="selected" />
+                            </Tab>
+                        </TabList>
+                    </div>
+
+                        <TabPanels class="mt-1 md:mt-2 col-span-3 md:col-span-2 max-w-4xl m-auto">
+                            <TabPanel>
+                                <template v-if="posts && isJoinedToGroup">
+                                    <div class="grid grid-cols-5 md:gap-x-3">
+                                        <div class="col-span-5 md:col-span-3">
+                                            <CreatePost :group="group" />
+                                            <PostList
+                                                v-if="posts.data.length"
+                                                :posts="posts.data"
+                                                class="flex-1"
+                                            />
+                                            <div
+                                                v-else
+                                                class="py-8 text-center dark:text-gray-100"
+                                            >
+                                                There are no posts in this group. Be the
+                                                first and create it.
+                                            </div>
+                                        </div>
+                                        <div class="hidden md:inline-block md:col-span-2 w-full">
+                                            <div class="bg-white dark:bg-zinc-950 dark:text-white border dark:border-none p-4 rounded-2xl">
+                                                <div class="flex items-center justify-between">
+                                                    <h3 class="font-medium">Tentang</h3>
+                                                    <span class="text-xs text-gray-500">
+                                                        <InformationCircleIcon class="w-4 h-4 mr-1"/>
+                                                    </span>
+                                                </div>
+                                                <div class="mt-2 text-sm">
+                                                    <ReadMoreReadLess :content="group.about" />
+                                                </div>
+
+                                                <div class="mt-4">
+                                                    <h3 class="font-bold flex items-center">
+                                                        <UserCircleIcon class="w-5 h-5 mr-1"/>
+                                                        Anggota
+                                                    </h3>
+                                                    <div class="mt-2 text-sm">
+                                                        <div class="flex mt-1 -space-x-4 rtl:space-x-reverse">
+                                                            <div
+                                                                v-for="user in users"
+                                                                :key="user.id"
+                                                                class="w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-black"
+                                                            >
+                                                                <img
+                                                                    :src="user.avatar_url"
+                                                                    :alt="user.name"
+                                                                    class="w-full h-full object-cover"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <p>
+                                                            <span class="text-xs">{{ countGroupMember() }} User</span> 
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- privat -->
+                                                <div class="mt-4">
+                                                    <h3 class="font-bold flex items-center">
+                                                        <span v-if="group.auto_approval">
+                                                            <LockOpenIcon class="w-4 mr-1" />
+                                                        </span>
+                                                        <span v-else>
+                                                            <LockClosedIcon class="w-4 mr-1" />
+                                                        </span>
+                                                        {{ group.auto_approval ? 'Grup Publik' : 'Grup Privat' }}
+                                                    </h3>
+                                                    <div class="mt-2 text-sm">
+                                                        <p>
+                                                            <!-- <span class="text-xs">Hanya anggota yang bisa melihat postingan</span>  -->
+                                                            {{ group.auto_approval ? 'Siapa pun bisa melihat siapa saja anggota grup ini dan apa yang mereka posting.' : 'Hanya anggota yang bisa melihat siapa saja anggota grup ini dan apa yang mereka posting.'}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- <div class="mt-4">
+                                                    <h3 class="font-bold flex items-center">
+                                                        <CameraIcon class="w-5 h-5 mr-1"/>
+                                                        Foto
+                                                    </h3>
+                                                    <div class="mt-2 text-sm">
+                                                        <div class="flex mt-1 -space-x-4 rtl:space-x-reverse">
+                                                            <div
+                                                                v-for="photo in photos"
+                                                                :key="photo.id"
+                                                                class="w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-black"
+                                                            >
+                                                                <img
+                                                                    :src="photo.url"
+                                                                    :alt="photo.name"
+                                                                    class="w-full h-full object-cover"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <p>
+                                                            <span class="text-xs">{{ photos.length }} Foto</span> 
+                                                        </p>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </template>
-                            </div>
-                        </TabPanel>
-                        <TabPanel v-if="isJoinedToGroup">
-                            <div class="mb-3">
-                                <TextInput
-                                    :model-value="searchKeyword"
-                                    placeholder="Type to search"
-                                    class="w-full"
-                                />
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <UserListItem
-                                    v-for="user of users"
-                                    :user="user"
-                                    :key="user.id"
-                                    :show-role-dropdown="isCurrentUserAdmin"
-                                    :disable-role-dropdown="
-                                        group.user_id === user.id
-                                    "
-                                    class="shadow rounded-lg"
-                                    @role-change="onRoleChange"
-                                    @delete="deleteUser"
-                                />
-                            </div>
-                        </TabPanel>
-                        <TabPanel v-if="isCurrentUserAdmin" class="">
-                            <div
-                                v-if="requests.length"
-                                class="grid grid-cols-2 gap-3"
-                            >
-                            <!-- request anggota -->
-                                <UserListItem
-                                    v-for="user of requests"
-                                    :user="user"
-                                    :key="user.id"
-                                    :for-approve="true"
-                                    class="shadow rounded-lg"
-                                    @approve="approveUser"
-                                    @reject="rejectUser"
-                                />
-                            </div>
-                            <div class="py-8 text-center dark:text-gray-100">
-                                There are no pending requests.
-                            </div>
-                        </TabPanel>
-                        <TabPanel>
-                            <TabPhotos :photos="photos" />
-                        </TabPanel>
-                        <TabPanel>
-                            <template v-if="isCurrentUserAdmin">
-                                <GroupForm :form="aboutForm" />
-                                <PrimaryButton @click="updateGroup">
-                                    Submit
-                                </PrimaryButton>
-                            </template>
-                            <div
-                                v-else
-                                class="ck-content-output dark:text-gray-100"
-                                v-html="group.about"
-                            ></div>
-                        </TabPanel>
-                    </TabPanels>
+
+                                
+                                <div
+                                    v-if="!isJoinedToGroup && !group.auto_approval"
+                                    class="py-8 text-center dark:text-gray-100"
+                                >
+                                    You don't have permission to view these posts.
+                                </div>
+                                <div v-if="!isJoinedToGroup && group.auto_approval">
+                                    <template v-if="posts">
+                                        <!-- <CreatePost :group="group" /> -->
+                                        <PostList
+                                            v-if="posts.data.length"
+                                            :posts="posts.data"
+                                            class="flex-1"
+                                        />
+                                        <div
+                                            v-else
+                                            class="py-8 text-center dark:text-gray-100"
+                                        >
+                                            There are no posts in this group. Be the
+                                            first and create it.
+                                        </div>
+                                    </template>
+                                </div>
+                            </TabPanel>
+                            <TabPanel v-if="isJoinedToGroup">
+                                <div class="mt-2 md:mt-0 px-2 md:px-0">
+                                    <div class="mb-3">
+                                        <TextInput
+                                            :model-value="searchKeyword"
+                                            placeholder="Type to search"
+                                            class="w-full"
+                                        />
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                        <UserListItem
+                                            v-for="user of users"
+                                            :user="user"
+                                            :key="user.id"
+                                            :show-role-dropdown="isCurrentUserAdmin"
+                                            :disable-role-dropdown="
+                                                group.user_id === user.id
+                                            "
+                                            class="shadow rounded-lg"
+                                            @role-change="onRoleChange"
+                                            @delete="deleteUser"
+                                        />
+                                    </div>
+                                </div>
+                            </TabPanel>
+                            <TabPanel v-if="isCurrentUserAdmin" class="">
+                                <div
+                                    v-if="requests.length"
+                                    class="grid grid-cols-2 gap-3"
+                                >
+                                <!-- request anggota -->
+                                    <UserListItem
+                                        v-for="user of requests"
+                                        :user="user"
+                                        :key="user.id"
+                                        :for-approve="true"
+                                        class="shadow rounded-lg"
+                                        @approve="approveUser"
+                                        @reject="rejectUser"
+                                    />
+                                </div>
+                                <div class="py-8 text-center dark:text-gray-100">
+                                    There are no pending requests.
+                                </div>
+                            </TabPanel>
+                            <TabPanel>
+                                <TabPhotos :photos="photos" />
+                            </TabPanel>
+                            <TabPanel>
+                                <template v-if="isCurrentUserAdmin">
+                                    <GroupForm :form="aboutForm" />
+                                    <PrimaryButton @click="updateGroup">
+                                        Submit
+                                    </PrimaryButton>
+                                </template>
+                                <div v-else class="bg-white dark:bg-black md:dark:bg-zinc-950 md:border dark:border-zinc-800 md:rounded-2xl px-4 py-3">
+                                    <h3 class="font-medium dark:text-white mb-2">Tentang</h3>
+                                    <div
+                                        class="ck-content-output dark:text-gray-100 -mt-4"
+                                        v-html="group.about"
+                                    ></div>
+                                </div>
+                            </TabPanel>
+                        </TabPanels>
                 </TabGroup>
             </div>
         </div>

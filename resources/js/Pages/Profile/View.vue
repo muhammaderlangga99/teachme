@@ -111,10 +111,6 @@ function submitAvatarImage() {
     })
 }
 
-const form = useForm({
-    follow: ""
-})
-
 function followUser() {
     const form = useForm({
         follow: !props.isCurrentUserFollower
@@ -125,12 +121,38 @@ function followUser() {
     })
 }
 
+// function for date joined
+function formatDate(date) {
+    const today = new Date();
+    const postDate = new Date(date);
+    const diff = today - postDate;
+    const hours = Math.floor(diff / 1000 / 60 / 60);
+    if (hours < 24) {
+        if (hours < 1) {
+            return Math.floor(diff / 1000 / 60) + "m";
+        }
+        return hours + "j";
+    }
+    if (today.getFullYear() === postDate.getFullYear()) {
+        return postDate.toLocaleString("default", {
+            month: "short",
+            day: "numeric",
+        });
+    } else {
+        return postDate.toLocaleString("default", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    }
+}
+
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <div class="max-w-[768px] mx-auto h-full overflow-auto">
-            <div class="px-4">
+        <div class="min-h-screen mx-auto h-full overflow-auto">
+            <div class="">
                 <div
                     v-show="showNotification && success"
                     class="my-2 py-2 px-3 font-medium text-sm bg-emerald-500 text-white"
@@ -144,7 +166,7 @@ function followUser() {
                     {{ errors.cover }}
                 </div>
 
-                <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
+                <div class="group relative bg-white dark:bg-black dark:text-gray-100">
                     <img :src="coverImageSrc || user.cover_url || '/img/default_cover.jpg'"
                          class="w-full h-[200px] object-cover">
                     <div class="absolute top-2 right-2" v-if="isMyProfile">
@@ -179,10 +201,10 @@ function followUser() {
                         </div>
                     </div>
 
-                    <div class="flex">
+                    <div class="flex flex-col max-w-4xl m-auto">
                         <div
                             class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[48px] w-[128px] h-[128px] rounded-full">
-                            <img :src="avatarImageSrc || user.avatar_url || '/img/default_avatar.webp'"
+                            <img :src="avatarImageSrc || user.avatar_url || '/img/avatar.jpg'"
                                  class="w-full h-full object-cover rounded-full">
                             <button
                                 v-if="!avatarImageSrc && isMyProfile"
@@ -208,80 +230,134 @@ function followUser() {
                         <div class="flex justify-between items-center flex-1 p-4">
                             <div>
                                 <h2 class="font-bold text-lg">{{ user.name }}</h2>
-                                <p class="text-xs text-gray-500">{{ followerCount }} follower(s)</p>
+                                <p class="text-xs text-gray-500">
+                                    <span class="text-md font-bold text-black dark:text-white">{{ followerCount }}</span> 
+                                    followers</p>
                             </div>
 
                             <div v-if="!isMyProfile">
                                 <PrimaryButton v-if="!isCurrentUserFollower" @click="followUser">
-                                    Follow User
+                                    Follow
                                 </PrimaryButton>
                                 <DangerButton v-else @click="followUser">
-                                    Unfollow User
+                                    Unfollow
                                 </DangerButton>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="border-t m-4 mt-0">
+            <div class="">
                 <TabGroup>
-                    <TabList class="flex bg-white dark:bg-slate-950 dark:text-white">
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Posts" :selected="selected"/>
-                        </Tab>
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Followers" :selected="selected"/>
-                        </Tab>
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Followings" :selected="selected"/>
-                        </Tab>
-                        <Tab v-slot="{ selected }" as="template">
-                            <TabItem text="Photos" :selected="selected"/>
-                        </Tab>
-                        <Tab v-if="isMyProfile" v-slot="{ selected }" as="template">
-                            <TabItem text="My Profile" :selected="selected"/>
-                        </Tab>
-                    </TabList>
-
-                    <TabPanels class="mt-2">
+                    <div class="bg-white dark:bg-black overflow-auto scrollbar-hide">
+                        <TabList class="flex w-[130vw] overflow-x-auto m-auto md:max-w-4xl dark:bg-black dark:text-white">
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Posts" :selected="selected"/>
+                            </Tab>
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Followers" :selected="selected"/>
+                            </Tab>
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Followings" :selected="selected"/>
+                            </Tab>
+                            <Tab v-slot="{ selected }" as="template">
+                                <TabItem text="Photos" :selected="selected"/>
+                            </Tab>
+                            <Tab v-if="isMyProfile" v-slot="{ selected }" as="template">
+                                <TabItem text="Profile" :selected="selected"/>
+                            </Tab>
+                        </TabList>
+                    </div>
+                    <TabPanels class="mt-1 md:mt-2 col-span-3 md:col-span-2 max-w-4xl m-auto">
                         <TabPanel>
                             <template v-if="posts">
-                                <CreatePost />
-                                <PostList :posts="posts.data" class="flex-1"/>
+                                <div class="grid grid-cols-5 md:gap-x-3">
+                                    <div class="col-span-5 md:col-span-3">
+                                        <CreatePost />
+                                        <PostList :posts="posts.data" v-if="posts.data.length" class="flex-1"/>
+                                        <div
+                                            v-else
+                                            class="py-8 text-center dark:text-gray-100"
+                                        >
+                                                There are no posts in this profile.
+                                        </div>
+                                    </div>
+
+                                    <div class="hidden md:inline-block col-span-5 md:col-span-2">
+                                        <div class="sticky top
+                                        -0">
+                                            <div class="bg-white dark:text-white dark:bg-zinc-950 p-3 rounded-2xl shadow">
+                                                <h3 class="font-medium">{{ user.name }}</h3>
+                                                <!-- follower -->
+                                                <div class="flex gap-5">
+                                                    <div class="flex justify-between items-center mt-3">
+                                                        <p class="font-extrabold">{{ followerCount }}</p>
+                                                        <p class="text-gray-500 text-sm ml-1">Followers</p>
+                                                    </div>
+
+                                                    <!-- following -->
+                                                    <div class="flex justify-between items-center mt-3">
+                                                        <p class="font-extrabold">{{ followings.length }}</p>
+                                                        <p class="text-gray-500 text-sm ml-1">Following</p>
+                                                    </div>
+                                                </div>
+                                                <!-- joined -->
+                                                <hr class="my-3 dark:border-zinc-800">
+                                                <!--  -->
+                                                <div class="">
+                                                    <p class="text-gray-500 text-sm">Bergabung</p>
+                                                    <p class="font-medium text-sm">{{ formatDate(user.created_at)  }}</p>
+                                                </div>
+                                                <!--  -->
+                                                <hr class="my-3 dark:border-zinc-800">
+                                                <!-- country -->
+                                                <div class="">
+                                                    <p class="text-gray-500 text-sm">Negara</p>
+                                                    <div class="font-medium text-sm">Indonesia</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </template>
                             <div v-else class="py-8 text-center dark:text-gray-100">
                                 You don't have permission to view these posts.
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            <div class="mb-3">
-                                <TextInput :model-value="searchFollowersKeyword" placeholder="Type to search"
-                                           class="w-full"/>
-                            </div>
-                            <div v-if="followers.length" class="grid grid-cols-2 gap-3">
-                                <UserListItem v-for="user of followers"
-                                              :user="user"
-                                              :key="user.id"
-                                              class="shadow rounded-lg"/>
-                            </div>
-                            <div v-else class="text-center py-8">
-                                User does not have followers.
+                            <div class="mt-2 md:mt-0 px-2 md:px-0">
+                                <div class="mb-3">
+                                    <TextInput :model-value="searchFollowersKeyword" placeholder="Type to search"
+                                            class="w-full"/>
+                                </div>
+                                <div v-if="followers.length" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <UserListItem v-for="user of followers"
+                                                :user="user"
+                                                :key="user.id"
+                                                class="shadow rounded-lg"/>
+                                </div>
+                                <div v-else class="text-center py-8">
+                                    User does not have followers.
+                                </div>
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            <div class="mb-3">
-                                <TextInput :model-value="searchFollowingsKeyword" placeholder="Type to search"
-                                           class="w-full"/>
-                            </div>
-                            <div v-if="followings.length" class="grid grid-cols-2 gap-3">
-                                <UserListItem v-for="user of followings"
-                                              :user="user"
-                                              :key="user.id"
-                                              class="shadow rounded-lg"/>
-                            </div>
-                            <div v-else class="text-center py-8">
-                                The user is not following to anybody
-                            </div>
+                            <div class="mt-2 md:mt-0 px-2 md:px-0">
+                                <div class="mb-3">
+                                    <TextInput :model-value="searchFollowingsKeyword" placeholder="Type to search"
+                                            class="w-full"/>
+                                </div>
+                                <!-- followw -->
+                                <div v-if="followings.length" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <UserListItem v-for="user of followings"
+                                                :user="user"
+                                                :key="user.id"
+                                                class="shadow rounded-lg"/>
+                                </div>
+                                <div v-else class="text-center py-8">
+                                    The user is not following to anybody
+                                </div>
+                            </div> 
                         </TabPanel>
                         <TabPanel>
                             <TabPhotos :photos="photos" />

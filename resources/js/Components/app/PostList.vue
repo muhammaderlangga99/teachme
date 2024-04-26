@@ -85,7 +85,7 @@ onMounted(() => {
 <!-- template berfungsi untuk membentuk sebuah component pada vue js -->
 
 <template>
-    <div class="overflow-auto scrollbar-hide rounded-2xl">
+    <div class="overflow-auto scrollbar-hide md:rounded-2xl">
         <PostItem
             v-for="post of allPosts.data"
             :key="post.id"

@@ -129,14 +129,44 @@ function onCommentDelete(comment) {
     }
     emit("commentDelete", comment);
 }
+
+
+// function date of post
+function formatDate(date) {
+    // if date is today, Display time based on a few minutes or how many hours have passed since the post was created
+    const today = new Date(); // today's date
+    const postDate = new Date(date); // post date
+    const diff = today - postDate; // difference in milliseconds
+    const hours = Math.floor(diff / 1000 / 60 / 60); // difference in hours
+    if (hours < 24) {
+        if (hours < 1) {
+            return Math.floor(diff / 1000 / 60) + "m";
+        }
+        return hours + "j";
+    }
+
+    // if date is not today & still in this year then only show date and month
+    if (today.getFullYear() === postDate.getFullYear()) {
+        return postDate.toLocaleString("default", {
+            month: "short",
+            day: "numeric",
+        });
+    } else {
+        return postDate.toLocaleString("default", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    }
+}
 </script>
 
 <template>
     <div v-if="authUser" class="flex gap-2 mb-5 mt-2">
-        <Link :href="route('profile', authUser.username)">
+        <Link :href="route('profile', authUser.username)" class="flex items-center">
             <img
                 :src="authUser.avatar_url"
-                class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"
+                class="w-[35px] h-[35px] object-cover rounded-full transition-all hover:border-blue-500"
             />
         </Link>
         <div class="flex flex-1">
@@ -164,10 +194,10 @@ function onCommentDelete(comment) {
                     <a href="javascript:void(0)">
                         <img
                             :src="comment.user.avatar_url"
-                            class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"
+                            class="w-[35px] h-[35px] object-cover rounded-full transition-all hover:border-blue-500"
                         />
                     </a>
-                    <div>
+                    <div class="text-sm leading-none md:leading-tight">
                         <h4 class="font-bold">
                             <a
                                 href="javascript:void(0)"
@@ -176,8 +206,8 @@ function onCommentDelete(comment) {
                                 {{ comment.user.name }}
                             </a>
                         </h4>
-                        <small class="text-xs text-gray-400">{{
-                            comment.updated_at
+                        <small class="text-xs text-gray-300 dark:text-slate-700">{{
+                           post.user.username +" · "+ formatDate(comment.updated_at)
                         }}</small>
                     </div>
                 </div>
@@ -189,7 +219,7 @@ function onCommentDelete(comment) {
                     @delete="deleteComment(comment)"
                 />
             </div>
-            <div class="pl-12">
+            <div class="pl-11">
                 <div v-if="editingComment && editingComment.id === comment.id">
                     <InputTextarea
                         v-model="editingComment.comment"
@@ -243,7 +273,7 @@ function onCommentDelete(comment) {
                             <span class="mr-2">{{
                                 comment.num_of_comments
                             }}</span>
-                            comments
+                            Komentar
                         </DisclosureButton>
                     </div>
                     <DisclosurePanel class="mt-3">

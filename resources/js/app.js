@@ -29,7 +29,9 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        // color emerald
-        color: '#10B981',
+        color: '#4B5563',
+        size: '2px',
+        position: 'fixed',
+        inverse: false,
     }
 });

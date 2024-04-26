@@ -1,20 +1,34 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
+import {CommandLineIcon} from '@heroicons/vue/24/solid'
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
-            </Link>
+    <!-- warning, website still developing -->
+    <div class="flex gap-x-1 items-center justify-center text-sm bg-yellow-500 text-gray-100">
+        <CommandLineIcon class="w-5 inline-block" />
+        <h1 class="py-1">
+            website masih dalam tahap pengembangan
+        </h1>
+    </div>
+    <div class="min-h-screen grid grid-cols-2 bg-white dark:bg-black">
+       
+        <div class="w-full col-span-2  hidden md:inline-block md:col-span-1 overflow-hidden bg-slate-600">
+            <div class="bg-slate-400 h-screen w-full overflow-hidden" >
+                <img src="https://images.pexels.com/photos/7438099/pexels-photo-7438099.jpeg?auto=compress&cs=tinysrgb" class="w-full h-full object-cover" alt="teachme">
+            </div>
         </div>
+        
 
         <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg"
+            class="w-full col-span-2 md:col-span-1 flex"
         >
-            <slot />
+            <div class="m-auto w-full px-5 md:max-w-lg">
+                <img src="/img/graduated.png" class="w-20" alt="teachme">
+                <slot />
+            </div>
         </div>
+        
     </div>
 </template>

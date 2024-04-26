@@ -41,7 +41,7 @@ function onModalHide() {
 
 <template>
     <AuthenticatedLayout>
-        <div class="p-8 w-[600px] mx-auto h-full overflow-auto">
+        <div class="w-full min-h-screen md:my-5 md:w-[600px] mx-auto h-full overflow-x-hidden">
             <PostItem :post="post"      
                       @editClick="openEditModal"
                       @attachmentClick="openAttachmentPreviewModal"/>
