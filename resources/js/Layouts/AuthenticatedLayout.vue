@@ -75,10 +75,12 @@ onMounted(() => {
 window.addEventListener("scroll", () => {
     // console.log(window.scrollY);
     const nav = document.querySelector("nav");
-    if (window.scrollY == 0) {
-        nav.classList.add("bg-white", "dark:bg-zinc-950");
+    if (window.scrollY > 0) {
+        nav.classList.add("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
+        nav.classList.remove("bg-white", "dark:bg-black", "dark:bg-zinc-950");
     } else {
-        nav.classList.remove("bg-white", "dark:bg-zinc-950");        
+        nav.classList.add("bg-white", "dark:bg-black", "dark:bg-zinc-950");
+        nav.classList.remove("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
     }
 });
  
@@ -87,7 +89,7 @@ window.addEventListener("scroll", () => {
 <template>
     <div class="h-full overflow-hidden flex flex-col bg-gray-100 dark:bg-black">
         <nav
-            class="bg-gradient-to-b from-white via-white dark:from-black dark:via-black to-transparent md:dark:bg-zinc-950 md:bg-gradient-to-b md:from-transparent md:via-transparent md:dark:from-transparent md:dark:via-transparent md:to-transparent  md:bg-white md:backdrop-blur-md md:backdrop-filter md:bg-clip-padding md:bg-opacity-70 md:dark:bg-opacity-70 md:dark:backdrop-filter md:dark:bg-clip-padding border-gray-100 dark:border-gray-700 fixed w-full z-50">
+            class="bg-white dark:bg-black md:dark:bg-zinc-950 md:bg-gradient-to-b md:from-transparent md:via-transparent md:dark:from-transparent md:dark:via-transparent md:to-transparent  md:bg-white md:backdrop-blur-md md:backdrop-filter md:bg-clip-padding md:bg-opacity-70 md:dark:bg-opacity-70 md:dark:backdrop-filter md:dark:bg-clip-padding border-gray-100 dark:border-gray-700 fixed w-full z-50">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between gap-2 h-16">
