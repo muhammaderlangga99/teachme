@@ -71,12 +71,16 @@ onMounted(() => {
     });
 });
 
-// function for showing icon magnifier
-// function showMagnifier() {
-//     return <MagnifyingGlassIcon
-//             class="w-3 text-blue-600 dark:text-slate-300 m-auto inline-block items-center" />
-    
-// }
+//  console scroll event
+window.addEventListener("scroll", () => {
+    // console.log(window.scrollY);
+    const nav = document.querySelector("nav");
+    if (window.scrollY == 0) {
+        nav.classList.add("bg-white", "dark:bg-zinc-950");
+    } else {
+        nav.classList.remove("bg-white", "dark:bg-zinc-950");        
+    }
+});
  
 </script>
 
@@ -143,7 +147,7 @@ onMounted(() => {
                     </div>
 
                     <div
-                        class="flex items-center gap-3 bg-white backdrop-filter md:backdrop-filter-none md:dark:backdrop-filter-none md:bg-transparent md:dark:bg-transparent bg-opacity-45 dark:backdrop-filter backdrop-blur-sm bg-clip-padding dark:bg-zinc-950 dark:bg-opacity-75 dark:backdrop-blur-md shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.1px] dark:border-t-zinc-800 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
+                        class="flex items-center gap-3 bg-white backdrop-filter md:backdrop-filter-none md:dark:backdrop-filter-none md:bg-transparent md:dark:bg-transparent bg-opacity-45 dark:backdrop-filter backdrop-blur-sm bg-clip-padding dark:bg-zinc-950 dark:bg-opacity-75 dark:backdrop-blur-md shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.1px] dark:border-t-zinc-700 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
                         <Link href="/"
                             class="p-1.5 rounded-lg dark:text-white flex flex-col justify-center items-center">
                         <HomeIcon class="w-6 h-6 dark:text-white" />
