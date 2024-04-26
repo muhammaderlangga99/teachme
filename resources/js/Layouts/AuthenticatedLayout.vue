@@ -83,7 +83,7 @@ onMounted(() => {
 <template>
     <div class="h-full overflow-hidden flex flex-col bg-gray-100 dark:bg-black">
         <nav
-            class="bg-white dark:bg-zinc-950 md:bg-white md:backdrop-blur-xl border-gray-100 dark:border-gray-700 fixed w-full z-50">
+            class="bg-gradient-to-b from-white via-white dark:from-black dark:via-black to-transparent md:dark:bg-zinc-950 md:bg-gradient-to-b md:from-transparent md:via-transparent md:dark:from-transparent md:dark:via-transparent md:to-transparent  md:bg-white md:backdrop-blur-md md:backdrop-filter md:bg-clip-padding md:bg-opacity-70 md:dark:bg-opacity-70 md:dark:backdrop-filter md:dark:bg-clip-padding border-gray-100 dark:border-gray-700 fixed w-full z-50">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between gap-2 h-16">
@@ -143,7 +143,7 @@ onMounted(() => {
                     </div>
 
                     <div
-                        class="flex items-center gap-3 bg-white backdrop-filter bg-opacity-45 dark:backdrop-filter dark:bg-opacity-85 backdrop-blur-sm bg-clip-padding dark:bg-zinc-950 md:dark:bg-transparent md:bg-transparent shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.1px] dark:border-t-zinc-800 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
+                        class="flex items-center gap-3 bg-white backdrop-filter md:backdrop-filter-none md:dark:backdrop-filter-none md:bg-transparent md:dark:bg-transparent bg-opacity-45 dark:backdrop-filter backdrop-blur-sm bg-clip-padding dark:bg-zinc-950 dark:bg-opacity-75 dark:backdrop-blur-md shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.1px] dark:border-t-zinc-800 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
                         <Link href="/"
                             class="p-1.5 rounded-lg dark:text-white flex flex-col justify-center items-center">
                         <HomeIcon class="w-6 h-6 dark:text-white" />
