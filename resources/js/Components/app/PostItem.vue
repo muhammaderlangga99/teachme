@@ -103,7 +103,7 @@ function sendReaction() {
 
 <template>
     <div
-        class="bg-white md:border md:shadow dark:bg-black md:dark:bg-zinc-950 dark:border-zinc-800 md:dark:border-none md:border-slate-200 dark:text-gray-100 md:rounded-2xl p-4 md:p-4 md:pb-1.5 border-t-[0.5px] border-zinc-200 md:mb-3 hover:bg-slate-50 dark:hover:bg-zinc-950 md:hover:bg-white md:dark:hover:bg-black overflow-x-hidden">
+        class="bg-white md:border md:shadow dark:bg-black md:dark:bg-zinc-950 dark:border-zinc-700 md:dark:border-none md:border-slate-200 dark:text-gray-100 md:rounded-2xl p-4 md:p-4 md:pb-1.5 border-t-[0.5px] border-zinc-200 md:mb-3 hover:bg-slate-50 dark:hover:bg-zinc-950 md:hover:bg-white md:dark:hover:bg-black overflow-x-hidden">
         <div class="flex items-center justify-between ">
             <PostUserHeader :post="post" />
             <div class="flex items-center gap-2">

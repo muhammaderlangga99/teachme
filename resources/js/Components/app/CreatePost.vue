@@ -42,7 +42,7 @@ function ambilKataKedua(kalimat) {
 <template>
     <div
         @click="showCreatePostModal"
-        class="py-3 px-3 border-t-[0.5px] md:border border-zinc-200 dark:border-zinc-800 md:dark:border-zinc-800 md:dark:bg-zinc-950 text-gray-500 md:rounded-full w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-black md:hover:border-blue-500 md:dark:hover:border-blue-500 md:mb-1.5"
+        class="py-3 px-3 border-t-[0.5px] md:border border-zinc-200 dark:border-zinc-700 md:dark:border-zinc-800 md:dark:bg-zinc-950 text-gray-500 md:rounded-full w-full flex items-center cursor-pointer transition-all gap-3 bg-white dark:bg-black md:hover:border-blue-500 md:dark:hover:border-blue-500 md:mb-1.5"
     >
         <img
             :src="authUser.avatar_url"

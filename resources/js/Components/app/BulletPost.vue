@@ -29,7 +29,7 @@ function showCreatePostModal() {
 
 <template>
     <div @click="showCreatePostModal"
-        class="p-2.5 pencil z-50 inline-block shadow-md rounded-full duration-300 text-white fixed bottom-16 right-4 md:hidden bg-blue-500 h-auto">
+        class="p-3 pencil z-50 inline-block shadow-lg rounded-full duration-300 text-white fixed bottom-16 right-4 md:hidden bg-blue-500 h-auto">
         <PencilIcon class="w-6" />
     </div>
 
