@@ -28,6 +28,7 @@ import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import TabPhotos from "@/Pages/Profile/TabPhotos.vue";
 import ReadMoreReadLess from "@/Components/app/ReadMoreReadLess.vue";
+import BulletPost from "@/Components/app/BulletPost.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -495,6 +496,7 @@ console.log(imageUser.value);
                                 <template v-if="posts && isJoinedToGroup">
                                     <div class="grid grid-cols-5 md:gap-x-3">
                                         <div class="col-span-5 md:col-span-3">
+                                            <BulletPost :group="group" />
                                             <CreatePost :group="group" />
                                             <PostList
                                                 v-if="posts.data.length"

@@ -27,26 +27,14 @@ import {
     AcademicCapIcon,
     PencilIcon,
 } from "@heroicons/vue/24/outline";
+import BulletPost from "@/Components/app/BulletPost.vue";
 import PostModal from "@/Components/app/PostModal.vue";
 
 const showingNavigationDropdown = ref(false);
 const notificationsDropdown = ref(false);
 const keywords = ref(usePage().props.search || "");
-const showModal = ref(false);
 const authUser = usePage().props.auth.user;
 
-const newPost = ref({
-    id: null,
-    body: "",
-    user: authUser,
-});
-
-defineProps({
-    group: {
-        type: Object,
-        default: null,
-    },
-});
 
 function showCreatePostModal() {
     showModal.value = true;
@@ -99,11 +87,14 @@ onMounted(() => {
         // }
 });
     
-function groupUrl() {
-    if (window.location.href == window.location.origin + "/g/" + window.location.pathname.split("/")[2]) {
-        return window.location.href;
-    }
-}
+// function akunUrl() {
+//     // if (window.location.href == window.location.origin + "/u/" + authUser.username) {
+//         console.log(window.location.origin);
+//     // }
+
+// }
+
+// akunUrl();
 //  console scroll event
 window.addEventListener("scroll", () => {
     // console.log(window.scrollY);
@@ -116,15 +107,20 @@ window.addEventListener("scroll", () => {
         nav.classList.remove("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
     }
 
-    const pencil = document.querySelector(".pencil");
-    if (window.scrollY > 200) {
-        pencil.classList.add("inline-block");
-        pencil.classList.remove("hidden");
-    }
-    else {
-        pencil.classList.add("hidden");
-        pencil.classList.remove("inline-block");
-    }
+    // const pencil = document.querySelector(".pencil");
+    // if (window.location.href == window.location.origin + "/") {
+    //     if (window.scrollY > 200) {
+    //         pencil.classList.add("inline-block");
+    //         pencil.classList.remove("hidden");
+    //     }
+    //     else {
+    //         pencil.classList.add("hidden");
+    //         pencil.classList.remove("inline-block");
+    //     }
+    // } else {
+    //     pencil.classList.add("hidden");
+    //     pencil.classList.remove("inline-block");
+    // }
     
 });
  
@@ -193,7 +189,7 @@ window.addEventListener("scroll", () => {
                     </div>
 
                     <div
-                        class="flex items-center gap-3 bg-white backdrop-filter md:backdrop-filter-none md:dark:backdrop-filter-none md:bg-transparent md:dark:bg-transparent bg-opacity-45 dark:backdrop-filter backdrop-blur-sm bg-clip-padding dark:bg-zinc-950 dark:bg-opacity-75 dark:backdrop-blur-md shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.1px] dark:border-t-zinc-700 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
+                        class="flex items-center gap-3 bg-white backdrop-filter md:backdrop-filter-none md:dark:backdrop-filter-none md:bg-transparent md:dark:bg-transparent bg-opacity-45 dark:backdrop-filter backdrop-blur-md bg-clip-padding dark:bg-zinc-950 dark:bg-opacity-75 dark:backdrop-blur-md shadow-lg md:shadow-none md:p-0 md:relative fixed p-2 border-t-[0.5px] border-zinc-200 dark:border-t-zinc-700 md:border-none bottom-0 left-0 right-0 md:bottom-0 md:left-0 md:right-0 justify-around md:justify-normal z-50">
                         <Link href="/"
                             class="p-1.5 rounded-lg dark:text-white flex flex-col justify-center items-center">
                         <HomeIcon class="w-6 h-6 dark:text-white" />
@@ -429,13 +425,6 @@ window.addEventListener("scroll", () => {
             <slot />
 
             <!-- button for post constent -->
-            <div v-if="!groupUrl()" @click="showCreatePostModal()"
-                class="p-2.5 pencil hidden shadow-md rounded-full duration-300 text-white fixed bottom-16 right-4 bg-blue-500 h-auto">
-                <PencilIcon class="w-6" />
-            </div>
-            <!-- <PostModal :post="newPost" :group="group" v-model="showModal" /> -->
-
-            <PostModal :post="newPost" :group="group" v-model="showModal" />
         </main>
     </div>
 </template>

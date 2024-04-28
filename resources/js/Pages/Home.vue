@@ -6,6 +6,7 @@ import CreatePost from "@/Components/app/CreatePost.vue";
 import PostList from "@/Components/app/PostList.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Swipe from "@/Components/Swipe.vue";
+import BulletPost from "@/Components/app/BulletPost.vue";
 
 defineProps ({
     posts: Object,
@@ -54,7 +55,7 @@ defineProps ({
                 <CreatePost />
             
                 <PostList :posts="posts.data" class="flex-1" />
-                
+                <BulletPost />
             </div>
 
 
