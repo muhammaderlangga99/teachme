@@ -24,14 +24,33 @@ import {
     UserIcon,
     ChatBubbleOvalLeftIcon,
     MagnifyingGlassIcon,
-    AcademicCapIcon
+    AcademicCapIcon,
+    PencilIcon,
 } from "@heroicons/vue/24/outline";
+import PostModal from "@/Components/app/PostModal.vue";
 
 const showingNavigationDropdown = ref(false);
 const notificationsDropdown = ref(false);
 const keywords = ref(usePage().props.search || "");
-
+const showModal = ref(false);
 const authUser = usePage().props.auth.user;
+
+const newPost = ref({
+    id: null,
+    body: "",
+    user: authUser,
+});
+
+defineProps({
+    group: {
+        type: Object,
+        default: null,
+    },
+});
+
+function showCreatePostModal() {
+    showModal.value = true;
+}
 
 function search() {
     router.get(route("search", encodeURIComponent(keywords.value)));
@@ -69,11 +88,25 @@ onMounted(() => {
             link.classList.remove("dark:text-white");
         }
     });
-});
 
+    // check the url path, if url path is /g/* then console log the url path
+    
+    
+    
+    
+    // if( window.location.href == window.location.origin + "/g/" + window.location.pathname.split("/")[2]){
+        //     console.log(window.location.href);
+        // }
+});
+    
+function groupUrl() {
+    if (window.location.href == window.location.origin + "/g/" + window.location.pathname.split("/")[2]) {
+        return window.location.href;
+    }
+}
 //  console scroll event
 window.addEventListener("scroll", () => {
-    // console.log(window.scrollY);
+    console.log(window.scrollY);
     const nav = document.querySelector("nav");
     if (window.scrollY > 0) {
         nav.classList.add("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
@@ -82,6 +115,16 @@ window.addEventListener("scroll", () => {
         nav.classList.add("bg-white", "dark:bg-black", "dark:bg-zinc-950");
         nav.classList.remove("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
     }
+
+    const pencil = document.querySelector(".pencil");
+    if (window.scrollY > 200) {
+        pencil.classList.add("inline-block");
+        pencil.classList.remove("hidden");
+    } else {
+        pencil.classList.add("hidden");
+        pencil.classList.remove("inline-block");
+    }
+    
 });
  
 </script>
@@ -383,6 +426,15 @@ window.addEventListener("scroll", () => {
         <!-- Page Content -->
         <main class="flex-1 overflow-hidden mt-16">
             <slot />
+
+            <!-- button for post constent -->
+            <div v-if="!groupUrl()" @click="showCreatePostModal()"
+                class="p-2.5 pencil hidden shadow-md rounded-full duration-300 text-white fixed bottom-16 right-4 bg-blue-600 h-auto">
+                <PencilIcon class="w-5" />
+            </div>
+            <!-- <PostModal :post="newPost" :group="group" v-model="showModal" /> -->
+
+            <PostModal :post="newPost" :group="group" v-model="showModal" />
         </main>
     </div>
 </template>

@@ -29,9 +29,7 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#4B5563',
-        size: '2px',
-        position: 'fixed',
-        inverse: false,
+        // color twitter
+        color: '#1da1f2',
     }
 });

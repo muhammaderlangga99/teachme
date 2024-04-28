@@ -103,7 +103,7 @@ function sendReaction() {
 
 <template>
     <div
-        class="bg-white md:border shadow dark:bg-black md:dark:bg-zinc-950 dark:border-zinc-700 md:dark:border-none md:border-slate-200 dark:text-gray-100 md:rounded-2xl p-4 md:p-4 md:pb-1.5 border-t-[0.5px] border-slate-100 md:mb-3 hover:bg-slate-50 dark:hover:bg-zinc-950 md:hover:bg-white md:dark:hover:bg-black overflow-x-hidden">
+        class="bg-white md:border md:shadow dark:bg-black md:dark:bg-zinc-950 dark:border-zinc-700 md:dark:border-none md:border-slate-200 dark:text-gray-100 md:rounded-2xl p-4 md:p-4 md:pb-1.5 border-t-[0.5px] border-slate-100 md:mb-3 hover:bg-slate-50 dark:hover:bg-zinc-950 md:hover:bg-white md:dark:hover:bg-black overflow-x-hidden">
         <div class="flex items-center justify-between ">
             <PostUserHeader :post="post" />
             <div class="flex items-center gap-2">
@@ -133,20 +133,20 @@ function sendReaction() {
                         class="text-gray-800 dark:text-gray-100 flex gap-1 items-center md:justify-center rounded-full py-2.5 md:px-4 md:flex-1 md:mt-1.5"
                         :class="[
                             post.current_user_has_reaction
-                                ? ' md:hover:bg-red-100 hover:text-red-600 md:dark:hover:bg-gray-900  text-red-500 dark:text-red-500'
-                                : ' md:hover:bg-red-100 hover:text-red-600 hover:dark:text-red-600 md:dark:hover:bg-gray-900 ',
+                                ? 'md:hover:bg-red-100 text-sm md:text-base hover:text-red-600 md:dark:hover:bg-gray-900  text-red-500 dark:text-red-500'
+                                : ' md:hover:bg-red-100 text-sm md:text-base hover:text-red-600 hover:dark:text-red-600 md:dark:hover:bg-gray-900 ',
                         ]">
                         <HeartIcon :class="[
                             post.current_user_has_reaction
-                                ? 'fill-red-600 dark:fill-red-600 w-5 stroke-none'
-                                : 'w-5 ',
+                                ? 'fill-red-600 dark:fill-red-600 w-4 md:w-5 stroke-none'
+                                : 'w-4 md:w-5 ',
                         ]" />
                         <p class="mr-0.5">{{ post.num_of_reactions }}</p>
                         {{ post.current_user_has_reaction ? "Suka" : "Suka" }}
                     </button>
                     <DisclosureButton
-                        class="text-zinc-800 dark:text-gray-100 flex gap-1 items-center md:justify-center dark:hover:bg-slate-800 rounded-full hover:bg-gray-200 py-2.5 px-4 md:flex-1 md:mt-1.5">
-                        <ChatBubbleOvalLeftEllipsisIcon class="w-5 h-5 " />
+                        class="text-zinc-800 text-sm md:text-base dark:text-gray-100 flex gap-1 items-center md:justify-center dark:hover:bg-slate-800 rounded-full hover:bg-gray-200 py-2.5 px-4 md:flex-1 md:mt-1.5">
+                        <ChatBubbleOvalLeftEllipsisIcon class="w-4 md:w-5 " />
                         <span class="mr-2">{{ post.num_of_comments }}</span>
                         Komentar
                     </DisclosureButton>

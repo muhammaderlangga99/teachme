@@ -19,7 +19,7 @@ defineProps({
                 <div class="ck-content-output" :class="contentClass" v-html="content"/>
             </DisclosurePanel>
             <div class="flex justify-end">
-                <DisclosureButton class="text-blue-500 hover:underline">
+                <DisclosureButton class="text-blue-500 hover:underline text-sm md:text-base">
                     {{ open ? 'Read less' : '...Read More' }}
                 </DisclosureButton>
             </div>
@@ -29,4 +29,9 @@ defineProps({
 
 <style scoped>
 
+@media (max-width: 767.98px) {
+    .ck-content-output{
+        font-size: 0.9rem !important;
+    }
+}
 </style>
