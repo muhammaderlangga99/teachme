@@ -45,40 +45,29 @@ function formatDate(date) {
 <template>
     <div class="flex items-center gap-2">
         <Link v-if="!post.group" :href="route('profile', post.user.username)">
-            <img
-                :src="post.user.avatar_url"
-                class="w-[40px] h-[40px] object-cover rounded-full transition-all hover:border-blue-500"
-            />
+        <img :src="post.user.avatar_url"
+            class="w-[40px] h-[40px] object-cover rounded-full transition-all hover:border-blue-500" />
         </Link>
         <Link v-if="post.group" :href="route('group.profile', post.group.slug)">
-            <img
-                :src="
+        <img :src="
                     post.group.thumbnail_url ||
                     '/img/avatar.jpg'
-                "
-                class="w-[40px] h-[40px] object-cover rounded-xl transition-all hover:border-blue-500"
-            />
-            <img
-                :src="post.user.avatar_url"
-                class="w-[25px] h-[25px] object-cover -translate-y-5  translate-x-5 border-2 border-white dark:border-zinc-950 rounded-full transition-all hover:border-blue-500"
-            />
+                " class="w-[40px] h-[40px] object-cover rounded-xl transition-all hover:border-blue-500" />
+        <img :src="post.user.avatar_url"
+            class="w-[25px] h-[25px] object-cover -translate-y-5  translate-x-5 border-2 border-white dark:border-zinc-950 rounded-full transition-all hover:border-blue-500" />
         </Link>
 
         <div class="leading-none md:leading-3">
-            <h4 class="flex items-center font-bold">
-                <Link v-if="!post.group"
-                    :href="route('profile', post.user.username)"
-                    class="hover:underline text-sm md:text-base"
-                >
-                    {{ post.user.name }}
+            <h4 class="flex items-center font-extrabold">
+                <Link v-if="!post.group" :href="route('profile', post.user.username)"
+                    class="hover:underline text-sm md:text-base">
+                {{ post.user.name }}
+                <small class="text-zinc-500 inline-block font-light">{{ " · " + formatDate(post.updated_at) }}</small>
                 </Link>
                 <!-- jika postnya dari grup, maka tampilkan -->
                 <template v-if="post.group">
-                    <Link
-                        :href="route('group.profile', post.group.slug)"
-                        class="hover:underline -mt-7"
-                    >
-                        {{ post.group.name }}
+                    <Link :href="route('group.profile', post.group.slug)" class="hover:underline -mt-7">
+                    {{ post.group.name }}
                     </Link>
 
                     <!-- <Link
@@ -96,15 +85,21 @@ function formatDate(date) {
                     </Link> -->
                 </template>
             </h4>
-            <small v-if="showTime && !post.group" class="text-xs text-gray-300 dark:text-slate-700 overflow-hidden w-full">
+            <small v-if="showTime && !post.group"
+                class="text-xs text-gray-300 dark:text-slate-700 overflow-hidden w-full">
                 {{
-                post.user.username +" · "+ formatDate(post.updated_at)
-            }}</small>
+                post.user.username
+                }}</small>
 
-            <Link :href="route('profile', post.user.username)" v-if="showTime && post.group" class="text-xs text-gray-300 dark:text-slate-700 overflow-hidden w-full hover:underline">
-                {{
-                post.user.name +" · "+ formatDate(post.updated_at)
-            }}</Link>
+            <Link :href="route('profile', post.user.username)" v-if="showTime && post.group"
+                class="text-xs text-gray-300 dark:text-slate-700 overflow-hidden w-full hover:underline">
+            {{
+            post.user.name
+
+            }}
+            <small class="text-zinc-500 inline-block font-light">{{ " · " + formatDate(post.updated_at)
+                }}</small>
+            </Link>
 
         </div>
     </div>

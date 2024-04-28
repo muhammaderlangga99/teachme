@@ -106,7 +106,7 @@ function groupUrl() {
 }
 //  console scroll event
 window.addEventListener("scroll", () => {
-    console.log(window.scrollY);
+    // console.log(window.scrollY);
     const nav = document.querySelector("nav");
     if (window.scrollY > 0) {
         nav.classList.add("bg-gradient-to-b", "from-white", "via-white", "dark:bg-gradient-to-b", "dark:from-black", "dark:via-black", "to-transparent");
@@ -120,7 +120,8 @@ window.addEventListener("scroll", () => {
     if (window.scrollY > 200) {
         pencil.classList.add("inline-block");
         pencil.classList.remove("hidden");
-    } else {
+    }
+    else {
         pencil.classList.add("hidden");
         pencil.classList.remove("inline-block");
     }
@@ -429,8 +430,8 @@ window.addEventListener("scroll", () => {
 
             <!-- button for post constent -->
             <div v-if="!groupUrl()" @click="showCreatePostModal()"
-                class="p-2.5 pencil hidden shadow-md rounded-full duration-300 text-white fixed bottom-16 right-4 bg-blue-600 h-auto">
-                <PencilIcon class="w-5" />
+                class="p-2.5 pencil hidden shadow-md rounded-full duration-300 text-white fixed bottom-16 right-4 bg-blue-500 h-auto">
+                <PencilIcon class="w-6" />
             </div>
             <!-- <PostModal :post="newPost" :group="group" v-model="showModal" /> -->
 
