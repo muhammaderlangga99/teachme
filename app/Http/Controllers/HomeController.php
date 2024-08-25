@@ -19,7 +19,9 @@ class HomeController extends Controller
     {
         $userId = Auth::id();
         $user = $request->user();
+        // ambil post dari user yang di follow
         $posts = Post::postsForTimeline($userId)
+            // select dari table posts semua kolom
             ->select('posts.*')
             ->leftJoin('followers AS f', function ($join) use ($userId) {
                 $join->on('posts.user_id', '=', 'f.user_id')
@@ -37,9 +39,13 @@ class HomeController extends Controller
                     ->orWhere('posts.user_id', $userId);
             })
             //            ->whereNot('posts.user_id', $userId)
+
+            // paginate 10 post per page
             ->paginate(10);
 
+        // ini untuk mengubah data post menjadi bentuk resource yang sudah di format
         $posts = PostResource::collection($posts);
+
         if ($request->wantsJson()) {
             return $posts;
         }
